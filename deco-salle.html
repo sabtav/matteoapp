@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Liste décoration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f8f8f8;
+    }
+    h1 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    .checkbox-group {
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.print-btn {
+      background-color: #28a745;
+      margin-left: 10px;
+    }
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    .totaux {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Décoration - Liste des achats</h1>
+
+  <div>
+    <div class="form-group">
+      <label for="element">Élément :</label>
+      <input type="text" id="element" />
+    </div>
+
+    <div class="form-group">
+      <label for="quantite">Quantité :</label>
+      <input type="number" id="quantite" min="1" />
+    </div>
+
+    <div class="form-group">
+      <label for="prix">Prix unitaire (€) :</label>
+      <input type="number" id="prix" min="0" step="0.01" />
+    </div>
+
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="achete" /> Acheté</label>
+    </div>
+
+    <button onclick="ajouterDecoration()">Ajouter</button>
+    <button class="print-btn" onclick="window.print()">Imprimer</button>
+  </div>
+
+  <table id="liste">
+    <thead>
+      <tr>
+        <th>Élément</th>
+        <th>Quantité</th>
+        <th>Prix unitaire (€)</th>
+        <th>Prix total (€)</th>
+        <th>Acheté</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="totaux">
+    Total dépenses : <span id="total">0.00</span> €<br />
+    Nombre d’éléments achetés : <span id="totalAchete">0</span>
+  </div>
+
+  <script>
+    function ajouterDecoration() {
+      const element = document.getElementById('element').value.trim();
+      const quantite = parseInt(document.getElementById('quantite').value);
+      const prixUnitaire = parseFloat(document.getElementById('prix').value);
+      const achete = document.getElementById('achete').checked;
+
+      if (!element || isNaN(quantite) || isNaN(prixUnitaire)) {
+        alert("Merci de remplir tous les champs.");
+        return;
+      }
+
+      const prixTotal = quantite * prixUnitaire;
+
+      const tbody = document.querySelector("#liste tbody");
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${element}</td>
+        <td>${quantite}</td>
+        <td data-prixunitaire="${prixUnitaire}">${prixUnitaire.toFixed(2)}</td>
+        <td data-total="${prixTotal}">${prixTotal.toFixed(2)}</td>
+        <td data-achete="${achete}">${achete ? 'Oui' : 'Non'}</td>
+        <td>
+          <button onclick="modifierLigne(this)">Modifier</button>
+          <button onclick="supprimerLigne(this)">Supprimer</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+
+      document.getElementById('element').value = "";
+      document.getElementById('quantite').value = "";
+      document.getElementById('prix').value = "";
+      document.getElementById('achete').checked = false;
+
+      mettreAJourTotaux();
+      enregistrerDansLocalStorage();
+    }
+
+    function supprimerLigne(bouton) {
+      bouton.closest('tr').remove();
+      mettreAJourTotaux();
+      enregistrerDansLocalStorage();
+    }
+
+    function modifierLigne(bouton) {
+      const tr = bouton.closest('tr');
+      const tds = tr.querySelectorAll('td');
+
+      document.getElementById('element').value = tds[0].textContent;
+      document.getElementById('quantite').value = tds[1].textContent;
+      document.getElementById('prix').value = tds[2].textContent;
+      document.getElementById('achete').checked = tds[4].textContent.trim().toLowerCase() === "oui";
+
+      tr.remove();
+      mettreAJourTotaux();
+      enregistrerDansLocalStorage();
+    }
+
+    function mettreAJourTotaux() {
+      const lignes = document.querySelectorAll("#liste tbody tr");
+      let total = 0;
+      let achetes = 0;
+
+      lignes.forEach(ligne => {
+        const prix = parseFloat(ligne.querySelector('[data-total]').dataset.total);
+        const achete = ligne.querySelector('[data-achete]').dataset.achete === "true";
+
+        if (!isNaN(prix)) total += prix;
+        if (achete) achetes++;
+      });
+
+      document.getElementById('total').textContent = total.toFixed(2);
+      document.getElementById('totalAchete').textContent = achetes;
+    }
+
+    function enregistrerDansLocalStorage() {
+      const lignes = document.querySelectorAll("#liste tbody tr");
+      const donnees = [];
+
+      lignes.forEach(ligne => {
+        const tds = ligne.querySelectorAll("td");
+        donnees.push({
+          element: tds[0].textContent,
+          quantite: parseInt(tds[1].textContent),
+          prixUnitaire: parseFloat(tds[2].dataset.prixunitaire),
+          prixTotal: parseFloat(tds[3].dataset.total),
+          achete: tds[4].dataset.achete === "true"
+        });
+      });
+
+      localStorage.setItem("decorations", JSON.stringify(donnees));
+    }
+
+    function chargerDepuisLocalStorage() {
+      const donnees = JSON.parse(localStorage.getItem("decorations")) || [];
+      donnees.forEach(item => {
+        const tbody = document.querySelector("#liste tbody");
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${item.element}</td>
+          <td>${item.quantite}</td>
+          <td data-prixunitaire="${item.prixUnitaire}">${item.prixUnitaire.toFixed(2)}</td>
+          <td data-total="${item.prixTotal}">${item.prixTotal.toFixed(2)}</td>
+          <td data-achete="${item.achete}">${item.achete ? 'Oui' : 'Non'}</td>
+          <td>
+            <button onclick="modifierLigne(this)">Modifier</button>
+            <button onclick="supprimerLigne(this)">Supprimer</button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      mettreAJourTotaux();
+    }
+
+    window.onload = chargerDepuisLocalStorage;
+  </script>
+
+</body>
+</html>

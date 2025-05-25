@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Suivi des Gâteaux</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #fffaf5;
+    }
+    h1 {
+      text-align: center;
+      color: #8b0000;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f8e8e8;
+    }
+    button {
+      margin-top: 10px;
+      margin-right: 10px;
+      padding: 8px 16px;
+      background-color: #8b0000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #a80000;
+    }
+    .total {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .delete-btn {
+      background-color: #c0392b;
+    }
+    .delete-btn:hover {
+      background-color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Suivi des Gâteaux</h1>
+
+  <div class="actions">
+    <button onclick="ajouterLigne()">Ajouter une ligne</button>
+    <button onclick="toutEffacer()">Tout effacer</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom du produit</th>
+        <th>Quantité</th>
+        <th>Prix unitaire (€)</th>
+        <th>Acheté</th>
+        <th>Supprimer</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <div class="total">Total global : <span id="total">0.00</span> €</div>
+
+  <script>
+    function ajouterLigne(nom = "", qte = 0, prix = 0, coche = false) {
+      const table = document.getElementById('table-body');
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td><input type="text" value="${nom}" onchange="sauvegarder()" /></td>
+        <td><input type="number" min="0" value="${qte}" onchange="sauvegarder()" /></td>
+        <td><input type="number" step="0.01" min="0" value="${prix}" onchange="sauvegarder()" /></td>
+        <td><input type="checkbox" ${coche ? "checked" : ""} onchange="sauvegarder()" /></td>
+        <td><button class="delete-btn" onclick="supprimerLigne(this)">Supprimer</button></td>
+      `;
+      sauvegarder();
+    }
+
+    function supprimerLigne(bouton) {
+      const row = bouton.parentElement.parentElement;
+      row.remove();
+      sauvegarder();
+    }
+
+    function sauvegarder() {
+      const table = document.getElementById('table-body');
+      const lignes = [];
+      let total = 0;
+      for (let i = 0; i < table.rows.length; i++) {
+        const cells = table.rows[i].cells;
+        const nom = cells[0].querySelector('input').value;
+        const qte = parseFloat(cells[1].querySelector('input').value) || 0;
+        const prix = parseFloat(cells[2].querySelector('input').value) || 0;
+        const coche = cells[3].querySelector('input').checked;
+        lignes.push({ nom, qte, prix, coche });
+        if (coche) total += qte * prix;
+      }
+      localStorage.setItem('gateaux-produits', JSON.stringify(lignes));
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function charger() {
+      const lignes = JSON.parse(localStorage.getItem('gateaux-produits') || '[]');
+      lignes.forEach(({ nom, qte, prix, coche }) => {
+        ajouterLigne(nom, qte, prix, coche);
+      });
+    }
+
+    function toutEffacer() {
+      if (confirm("Êtes-vous sûr de vouloir tout effacer ?")) {
+        localStorage.removeItem('gateaux-produits');
+        document.getElementById('table-body').innerHTML = '';
+        document.getElementById('total').textContent = '0.00';
+      }
+    }
+
+    window.onload = charger;
+  </script>
+</body>
+</html>

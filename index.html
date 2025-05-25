@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organisation des 18 ans de Mattéo</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    :root {
+      --primary-color: #e67e22;
+      --text-color: #2c3e50;
+      --bg-color: #fefefe;
+      --card-bg: #f9f9f9;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: var(--primary-color);
+    }
+
+    nav {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    nav ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li {
+      background-color: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    nav ul li:hover {
+      background-color: #fff3e6;
+      transform: translateY(-5px);
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: bold;
+      font-size: 1.05em;
+    }
+
+    nav ul li a:hover {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bienvenue à l'organisation des 18 ans de Mattéo</h1>
+  </header>
+
+  <main>
+    <nav aria-label="Menu d’organisation des 18 ans">
+      <ul>
+        <li><a href="invites.html">Invités</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="deco-salle.html">Déco de la salle</a></li>
+        <li><a href="location-vaisselle.html">Location de la vaisselle</a></li>
+        <li><a href="activites.html">Activités</a></li>
+        <li><a href="repas.html">Repas</a></li>
+        <li><a href="boissons.html">Boissons</a></li>
+        <li><a href="gateau.html">Gâteau d'anniversaire</a></li>
+        <li><a href="cadeau-matteo.html">Cadeau de Mattéo</a></li>
+        <li><a href="cadeaux-invites.html">Cadeaux des invités</a></li>
+        <li><a href="tenues.html">Tenues</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>

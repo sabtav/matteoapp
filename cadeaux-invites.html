@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cadeaux des invités - 18 ans de Mathéo</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+  }
+  #photoSection {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  #photoSection input[type="text"] {
+    width: 80%;
+    margin-bottom: 10px;
+  }
+  #photoPreview {
+    max-width: 300px;
+    max-height: 200px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #eee;
+  }
+  input[type="text"], input[type="number"] {
+    width: 90%;
+    box-sizing: border-box;
+  }
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  #totalPrice {
+    font-weight: bold;
+    margin-top: 15px;
+    font-size: 1.2rem;
+  }
+  #addRowBtn {
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Cadeaux des invités - 18 ans de Mathéo</h1>
+
+<div id="photoSection">
+  <h2>Photo du produit choisi</h2>
+  <input type="text" id="photoURL" placeholder="Colle ici l'URL de la photo" />
+  <br />
+  <img id="photoPreview" src="" alt="Photo produit" />
+</div>
+
+<table id="giftsTable">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nom du cadeau</th>
+      <th>Quantité</th>
+      <th>Prix unitaire (€)</th>
+      <th>Total (€)</th>
+      <th>Acheté</th>
+      <th>Supprimer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- lignes ajoutées ici -->
+  </tbody>
+</table>
+
+<button id="addRowBtn">Ajouter une ligne</button>
+
+<div id="totalPrice">Total global : 0 €</div>
+
+<script>
+  const giftsTableBody = document.querySelector("#giftsTable tbody");
+  const totalPriceDiv = document.getElementById("totalPrice");
+  const photoURLInput = document.getElementById("photoURL");
+  const photoPreview = document.getElementById("photoPreview");
+  const addRowBtn = document.getElementById("addRowBtn");
+
+  // Récupération des données depuis localStorage
+  let gifts = JSON.parse(localStorage.getItem("giftsList")) || [];
+  let photoURL = localStorage.getItem("giftPhotoURL") || "";
+
+  function calculateTotalGlobal() {
+    let total = 0;
+    gifts.forEach(gift => {
+      if(gift.quantity && gift.price && !isNaN(gift.quantity) && !isNaN(gift.price)) {
+        total += gift.quantity * gift.price;
+      }
+    });
+    totalPriceDiv.textContent = "Total global : " + total.toFixed(2) + " €";
+  }
+
+  function createRow(gift, index) {
+    const row = document.createElement("tr");
+
+    // Numéro
+    const tdNum = document.createElement("td");
+    tdNum.textContent = index + 1;
+    row.appendChild(tdNum);
+
+    // Nom
+    const tdName = document.createElement("td");
+    const inputName = document.createElement("input");
+    inputName.type = "text";
+    inputName.value = gift.name || "";
+    inputName.placeholder = "Nom du cadeau";
+    inputName.addEventListener("input", () => {
+      gift.name = inputName.value;
+      saveData();
+    });
+    tdName.appendChild(inputName);
+    row.appendChild(tdName);
+
+    // Quantité
+    const tdQty = document.createElement("td");
+    const inputQty = document.createElement("input");
+    inputQty.type = "number";
+    inputQty.min = 0;
+    inputQty.value = gift.quantity || 0;
+    inputQty.addEventListener("input", () => {
+      gift.quantity = parseInt(inputQty.value) || 0;
+      updateRowTotal(row, gift);
+      saveData();
+    });
+    tdQty.appendChild(inputQty);
+    row.appendChild(tdQty);
+
+    // Prix unitaire
+    const tdPrice = document.createElement("td");
+    const inputPrice = document.createElement("input");
+    inputPrice.type = "number";
+    inputPrice.min = 0;
+    inputPrice.step = "0.01";
+    inputPrice.value = gift.price || 0;
+    inputPrice.addEventListener("input", () => {
+      gift.price = parseFloat(inputPrice.value) || 0;
+      updateRowTotal(row, gift);
+      saveData();
+    });
+    tdPrice.appendChild(inputPrice);
+    row.appendChild(tdPrice);
+
+    // Total ligne
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = (gift.quantity && gift.price) ? (gift.quantity * gift.price).toFixed(2) : "0.00";
+    row.appendChild(tdTotal);
+
+    // Case acheté
+    const tdBought = document.createElement("td");
+    const inputBought = document.createElement("input");
+    inputBought.type = "checkbox";
+    inputBought.checked = gift.bought || false;
+    inputBought.addEventListener("change", () => {
+      gift.bought = inputBought.checked;
+      saveData();
+    });
+    tdBought.appendChild(inputBought);
+    row.appendChild(tdBought);
+
+    // Bouton supprimer
+    const tdDelete = document.createElement("td");
+    const btnDelete = document.createElement("button");
+    btnDelete.textContent = "X";
+    btnDelete.style.cursor = "pointer";
+    btnDelete.addEventListener("click", () => {
+      gifts.splice(index, 1);
+      renderTable();
+      saveData();
+    });
+    tdDelete.appendChild(btnDelete);
+    row.appendChild(tdDelete);
+
+    return row;
+  }
+
+  function updateRowTotal(row, gift) {
+    const tdTotal = row.children[4];
+    const total = (gift.quantity && gift.price) ? (gift.quantity * gift.price).toFixed(2) : "0.00";
+    tdTotal.textContent = total;
+    calculateTotalGlobal();
+  }
+
+  function renderTable() {
+    giftsTableBody.innerHTML = "";
+    gifts.forEach((gift, index) => {
+      giftsTableBody.appendChild(createRow(gift, index));
+    });
+    calculateTotalGlobal();
+  }
+
+  function saveData() {
+    localStorage.setItem("giftsList", JSON.stringify(gifts));
+    localStorage.setItem("giftPhotoURL", photoURLInput.value);
+  }
+
+  photoURLInput.value = photoURL;
+  photoPreview.src = photoURL;
+
+  photoURLInput.addEventListener("input", () => {
+    photoPreview.src = photoURLInput.value;
+    saveData();
+  });
+
+  addRowBtn.addEventListener("click", () => {
+    gifts.push({name:"", quantity:0, price:0, bought:false});
+    renderTable();
+    saveData();
+  });
+
+  // Initial rendering
+  renderTable();
+
+</script>
+
+</body>
+</html>

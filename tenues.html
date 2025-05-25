@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tenues - Liste des achats</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+  }
+  section {
+    margin-bottom: 40px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #eee;
+  }
+  input[type="text"], input[type="number"] {
+    width: 90%;
+    box-sizing: border-box;
+  }
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  button.addRowBtn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+  .totalPerson {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 1.1rem;
+  }
+  #totalGlobal {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 30px;
+    text-align: center;
+    border-top: 2px solid #333;
+    padding-top: 15px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Tenues - Liste des achats</h1>
+
+<div id="container"></div>
+
+<div id="totalGlobal">Total global : 0 €</div>
+
+<script>
+  const persons = ["Alexandre", "Sabrina", "Mattéo", "Maélys"];
+  const container = document.getElementById("container");
+
+  // Récupérer données localStorage ou initialiser
+  let data = JSON.parse(localStorage.getItem("tenuesData")) || {
+    Alexandre: [],
+    Sabrina: [],
+    Mattéo: [],
+    Maélys: []
+  };
+
+  function saveData() {
+    localStorage.setItem("tenuesData", JSON.stringify(data));
+  }
+
+  // Crée une ligne modifiable pour un tableau d'une personne
+  function createRow(person, item, index) {
+    const row = document.createElement("tr");
+
+    // Nom produit
+    const tdName = document.createElement("td");
+    const inputName = document.createElement("input");
+    inputName.type = "text";
+    inputName.value = item.name || "";
+    inputName.placeholder = "Nom du produit";
+    inputName.addEventListener("input", () => {
+      data[person][index].name = inputName.value;
+      saveData();
+    });
+    tdName.appendChild(inputName);
+    row.appendChild(tdName);
+
+    // Prix
+    const tdPrice = document.createElement("td");
+    const inputPrice = document.createElement("input");
+    inputPrice.type = "number";
+    inputPrice.min = 0;
+    inputPrice.step = "0.01";
+    inputPrice.value = item.price || 0;
+    inputPrice.addEventListener("input", () => {
+      data[person][index].price = parseFloat(inputPrice.value) || 0;
+      updateTotals();
+      saveData();
+    });
+    tdPrice.appendChild(inputPrice);
+    row.appendChild(tdPrice);
+
+    // Case acheté
+    const tdBought = document.createElement("td");
+    const inputBought = document.createElement("input");
+    inputBought.type = "checkbox";
+    inputBought.checked = item.bought || false;
+    inputBought.addEventListener("change", () => {
+      data[person][index].bought = inputBought.checked;
+      saveData();
+    });
+    tdBought.appendChild(inputBought);
+    row.appendChild(tdBought);
+
+    // Bouton supprimer
+    const tdDelete = document.createElement("td");
+    const btnDelete = document.createElement("button");
+    btnDelete.textContent = "X";
+    btnDelete.style.cursor = "pointer";
+    btnDelete.addEventListener("click", () => {
+      data[person].splice(index, 1);
+      renderPersonSection(person);
+      updateTotals();
+      saveData();
+    });
+    tdDelete.appendChild(btnDelete);
+    row.appendChild(tdDelete);
+
+    return row;
+  }
+
+  function renderPersonSection(person) {
+    let section = document.getElementById("section-" + person);
+    if (!section) {
+      section = document.createElement("section");
+      section.id = "section-" + person;
+
+      const h2 = document.createElement("h2");
+      h2.textContent = person;
+      section.appendChild(h2);
+
+      const table = document.createElement("table");
+      table.id = "table-" + person;
+
+      const thead = document.createElement("thead");
+      thead.innerHTML = `
+        <tr>
+          <th>Nom du produit</th>
+          <th>Prix (€)</th>
+          <th>Acheté</th>
+          <th>Supprimer</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      table.appendChild(tbody);
+
+      section.appendChild(table);
+
+      const btnAdd = document.createElement("button");
+      btnAdd.textContent = "Ajouter une ligne";
+      btnAdd.className = "addRowBtn";
+      btnAdd.addEventListener("click", () => {
+        data[person].push({ name: "", price: 0, bought: false });
+        renderPersonSection(person);
+        updateTotals();
+        saveData();
+      });
+      section.appendChild(btnAdd);
+
+      const totalDiv = document.createElement("div");
+      totalDiv.className = "totalPerson";
+      totalDiv.id = "total-" + person;
+      section.appendChild(totalDiv);
+
+      container.appendChild(section);
+    }
+
+    const tbody = document.querySelector("#table-" + person + " tbody");
+    tbody.innerHTML = "";
+    data[person].forEach((item, index) => {
+      tbody.appendChild(createRow(person, item, index));
+    });
+
+    updatePersonTotal(person);
+  }
+
+  function updatePersonTotal(person) {
+    const total = data[person].reduce((sum, item) => sum + (item.price || 0), 0);
+    document.getElementById("total-" + person).textContent = `Total ${person} : ${total.toFixed(2)} €`;
+  }
+
+  function updateTotals() {
+    persons.forEach(updatePersonTotal);
+    const totalGlobal = persons.reduce((sum, person) => {
+      return sum + data[person].reduce((s, item) => s + (item.price || 0), 0);
+    }, 0);
+    document.getElementById("totalGlobal").textContent = "Total global : " + totalGlobal.toFixed(2) + " €";
+  }
+
+  // Initial rendering
+  persons.forEach(renderPersonSection);
+  updateTotals();
+</script>
+
+</body>
+</html>

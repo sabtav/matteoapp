@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Liste des invités</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Dancing Script', cursive;
+      background-color: #fefefe;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      flex: 1 1 45%;
+      min-width: 120px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: 'Dancing Script', cursive;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .editBtn, .deleteBtn {
+      font-size: 0.75em;
+      padding: 4px 8px;
+      margin-right: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    #printBtn {
+      margin: 20px auto;
+      display: block;
+      background-color: #2196F3;
+    }
+
+    #totals {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.2em;
+    }
+
+    @media screen and (max-width: 600px) {
+      label {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Liste des invités</h1>
+
+  <form id="inviteForm">
+    <div class="form-row">
+      <label>
+        Prénom :
+        <input type="text" id="prenom" required>
+      </label>
+      <label>
+        Nom :
+        <input type="text" id="nom" required>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        Type :
+        <select id="type">
+          <option value="Adulte">Adulte</option>
+          <option value="Enfant">Enfant</option>
+        </select>
+      </label>
+      <label>
+        Présent :
+        <input type="checkbox" id="present">
+      </label>
+    </div>
+    <button type="submit" id="addBtn">Ajouter un invité</button>
+  </form>
+
+  <table id="inviteTable">
+    <thead>
+      <tr>
+        <th>Prénom</th>
+        <th>Nom</th>
+        <th>Type</th>
+        <th>Présent</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="totals"></div>
+
+  <button id="printBtn">Imprimer la liste</button>
+
+  <script>
+    const form = document.getElementById('inviteForm');
+    const addBtn = document.getElementById('addBtn');
+    const tbody = document.querySelector('#inviteTable tbody');
+    const printBtn = document.getElementById('printBtn');
+    const totalsDiv = document.getElementById('totals');
+
+    let invites = JSON.parse(localStorage.getItem('invites')) || [];
+    let editIndex = -1;
+
+    function renderTable() {
+      tbody.innerHTML = '';
+      invites.forEach((inv, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${inv.prenom}</td>
+          <td>${inv.nom}</td>
+          <td>${inv.type}</td>
+          <td>${inv.present ? 'Oui' : 'Non'}</td>
+          <td>
+            <button class="editBtn" onclick="editInvite(${i})">Modifier</button>
+            <button class="deleteBtn" onclick="deleteInvite(${i})">Supprimer</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateTotals();
+      saveInvites();
+    }
+
+    function updateTotals() {
+      const total = invites.length;
+      const adultes = invites.filter(i => i.present && i.type === "Adulte").length;
+      const enfants = invites.filter(i => i.present && i.type === "Enfant").length;
+
+      totalsDiv.innerHTML = `
+        Total invités : <strong>${total}</strong><br>
+        Présents - Adultes : <strong>${adultes}</strong> | Enfants : <strong>${enfants}</strong>
+      `;
+    }
+
+    function clearForm() {
+      form.reset();
+      editIndex = -1;
+      addBtn.textContent = "Ajouter un invité";
+    }
+
+    function saveInvites() {
+      localStorage.setItem('invites', JSON.stringify(invites));
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const prenom = document.getElementById('prenom').value.trim();
+      const nom = document.getElementById('nom').value.trim();
+      const type = document.getElementById('type').value;
+      const present = document.getElementById('present').checked;
+
+      if (!prenom || !nom) {
+        alert('Merci de remplir prénom et nom');
+        return;
+      }
+
+      const newInvite = { prenom, nom, type, present };
+
+      if (editIndex === -1) {
+        invites.push(newInvite);
+      } else {
+        invites[editIndex] = newInvite;
+      }
+
+      renderTable();
+      clearForm();
+    });
+
+    function editInvite(index) {
+      const inv = invites[index];
+      document.getElementById('prenom').value = inv.prenom;
+      document.getElementById('nom').value = inv.nom;
+      document.getElementById('type').value = inv.type;
+      document.getElementById('present').checked = inv.present;
+      editIndex = index;
+      addBtn.textContent = "Modifier l'invité";
+    }
+
+    function deleteInvite(index) {
+      if (confirm("Supprimer cet invité ?")) {
+        invites.splice(index, 1);
+        renderTable();
+        clearForm();
+      }
+    }
+
+    printBtn.addEventListener('click', () => {
+      window.print();
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>

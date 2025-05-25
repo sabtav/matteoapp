@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Budget Global</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #ecf0f1;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    .total {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Budget Global</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Catégorie</th>
+        <th>Montant (€)</th>
+      </tr>
+    </thead>
+    <tbody id="budget-rows">
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="total">Total général</td>
+        <td class="total" id="total-global">0.00 €</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <script>
+    const categories = [
+      { nom: "Repas", cle: "repas-Apéritif,repas-Repas,repas-Fromage,repas-Candy Bar" },
+      { nom: "Boissons", cle: "boissons" },
+      { nom: "Gâteaux", cle: "gateaux" },
+      { nom: "Cadeaux Mattéo", cle: "cadeaux-matteo" },
+      { nom: "Cadeaux Invités", cle: "cadeaux-invites" },
+      { nom: "Tenues", cle: "tenues-Alexandre,tenues-Sabrina,tenues-Mattéo,tenues-Maélys" },
+      { nom: "Activités", cle: "activites" },
+      { nom: "Déco", cle: "deco" },
+      { nom: "Salle", cle: "salle" },
+      { nom: "Divers / Imprévus", cle: "divers", manuel: true }
+    ];
+
+    function chargerBudget() {
+      let total = 0;
+      const tbody = document.getElementById('budget-rows');
+      tbody.innerHTML = "";
+
+      categories.forEach(cat => {
+        let montant = 0;
+
+        if (cat.manuel) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${cat.nom}</td>
+            <td><input type="number" value="0" onchange="sauverDivers(this)" /></td>
+          `;
+          tbody.appendChild(row);
+          return;
+        }
+
+        const cles = cat.cle.split(",");
+        cles.forEach(cle => {
+          const data = JSON.parse(localStorage.getItem(cle) || '[]');
+          data.forEach(item => {
+            if (item.coche || item.coche === undefined) {
+              const qte = parseFloat(item.qte) || 0;
+              const prix = parseFloat(item.prix) || 0;
+              montant += qte * prix;
+            }
+          });
+        });
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${cat.nom}</td>
+          <td>${montant.toFixed(2)} €</td>
+        `;
+        tbody.appendChild(row);
+        total += montant;
+      });
+
+      const divers = parseFloat(localStorage.getItem("divers") || 0);
+      total += divers;
+      const rowDivers = document.createElement('tr');
+      rowDivers.innerHTML = `
+        <td>Divers / Imprévus</td>
+        <td>${divers.toFixed(2)} €</td>
+      `;
+      tbody.appendChild(rowDivers);
+
+      document.getElementById('total-global').textContent = total.toFixed(2) + " €";
+    }
+
+    function sauverDivers(input) {
+      localStorage.setItem("divers", input.value);
+      chargerBudget();
+    }
+
+    window.onload = chargerBudget;
+  </script>
+</body>
+</html>

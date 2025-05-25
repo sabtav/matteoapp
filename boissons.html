@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Suivi des Boissons</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #eefafc;
+    }
+    h1 {
+      text-align: center;
+      color: #006080;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #d9f0f7;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #006080;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0089a8;
+    }
+    .total {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Suivi des Boissons</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom du produit</th>
+        <th>Quantité</th>
+        <th>Prix unitaire (€)</th>
+        <th>Acheté</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <button onclick="ajouterLigne()">Ajouter une ligne</button>
+
+  <div class="total">Total global : <span id="total">0.00</span> €</div>
+
+  <script>
+    function ajouterLigne() {
+      const table = document.getElementById('table-body');
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td><input type="text" onchange="sauvegarder()" /></td>
+        <td><input type="number" min="0" onchange="sauvegarder()" /></td>
+        <td><input type="number" step="0.01" min="0" onchange="sauvegarder()" /></td>
+        <td><input type="checkbox" onchange="sauvegarder()" /></td>
+      `;
+      sauvegarder();
+    }
+
+    function sauvegarder() {
+      const table = document.getElementById('table-body');
+      const lignes = [];
+      let total = 0;
+      for (let i = 0; i < table.rows.length; i++) {
+        const nom = table.rows[i].cells[0].querySelector('input').value;
+        const qte = parseFloat(table.rows[i].cells[1].querySelector('input').value) || 0;
+        const prix = parseFloat(table.rows[i].cells[2].querySelector('input').value) || 0;
+        const coche = table.rows[i].cells[3].querySelector('input').checked;
+        lignes.push({ nom, qte, prix, coche });
+        if (coche) total += qte * prix;
+      }
+      localStorage.setItem('boissons-produits', JSON.stringify(lignes));
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function charger() {
+      const lignes = JSON.parse(localStorage.getItem('boissons-produits') || '[]');
+      const table = document.getElementById('table-body');
+      lignes.forEach(data => {
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td><input type="text" value="${data.nom}" onchange="sauvegarder()" /></td>
+          <td><input type="number" min="0" value="${data.qte}" onchange="sauvegarder()" /></td>
+          <td><input type="number" step="0.01" min="0" value="${data.prix}" onchange="sauvegarder()" /></td>
+          <td><input type="checkbox" ${data.coche ? 'checked' : ''} onchange="sauvegarder()" /></td>
+        `;
+      });
+      sauvegarder();
+    }
+
+    window.onload = charger;
+  </script>
+</body>
+</html>

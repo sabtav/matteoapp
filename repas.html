@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Repas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    h1, h2 {
+      color: #006080;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background-color: #d9f0f7;
+    }
+    button {
+      margin: 10px 0;
+      padding: 6px 12px;
+      background-color: #006080;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0089a8;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    hr {
+      margin: 30px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Organisation Repas</h1>
+
+  <div id="categories"></div>
+  <h2>Total global : <span id="total-global">0.00</span> €</h2>
+
+  <script>
+    const sousCategories = ['Apéritif', 'Repas', 'Fromage', 'Candy Bar'];
+
+    function creerSection(nom) {
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <h2>${nom}</h2>
+        <table id="table-${nom}">
+          <thead>
+            <tr>
+              <th>Nom du produit</th>
+              <th>Quantité</th>
+              <th>Prix unitaire (€)</th>
+              <th>Acheté</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button onclick="ajouterLigne('${nom}')">Ajouter une ligne</button>
+        <div class="total">Total ${nom} : <span id="total-${nom}">0.00</span> €</div>
+        <hr>
+      `;
+      document.getElementById('categories').appendChild(div);
+    }
+
+    function ajouterLigne(nom) {
+      const table = document.querySelector(`#table-${nom} tbody`);
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td><input type="text" onchange="sauvegarder()" /></td>
+        <td><input type="number" min="0" onchange="sauvegarder()" /></td>
+        <td><input type="number" step="0.01" min="0" onchange="sauvegarder()" /></td>
+        <td><input type="checkbox" onchange="sauvegarder()" /></td>
+      `;
+      sauvegarder();
+    }
+
+    function sauvegarder() {
+      let totalGlobal = 0;
+      sousCategories.forEach(cat => {
+        const table = document.querySelector(`#table-${cat} tbody`);
+        const lignes = [];
+        let total = 0;
+        for (let i = 0; i < table.rows.length; i++) {
+          const nom = table.rows[i].cells[0].querySelector('input').value;
+          const qte = parseFloat(table.rows[i].cells[1].querySelector('input').value) || 0;
+          const prix = parseFloat(table.rows[i].cells[2].querySelector('input').value) || 0;
+          const coche = table.rows[i].cells[3].querySelector('input').checked;
+          lignes.push({ nom, qte, prix, coche });
+          if (coche) total += qte * prix;
+        }
+        localStorage.setItem(`repas-${cat}`, JSON.stringify(lignes));
+        document.getElementById(`total-${cat}`).textContent = total.toFixed(2);
+        totalGlobal += total;
+      });
+      document.getElementById('total-global').textContent = totalGlobal.toFixed(2);
+    }
+
+    function charger() {
+      sousCategories.forEach(cat => {
+        creerSection(cat);
+        const lignes = JSON.parse(localStorage.getItem(`repas-${cat}`) || '[]');
+        const table = document.querySelector(`#table-${cat} tbody`);
+        lignes.forEach(data => {
+          const row = table.insertRow();
+          row.innerHTML = `
+            <td><input type="text" value="${data.nom}" onchange="sauvegarder()" /></td>
+            <td><input type="number" min="0" value="${data.qte}" onchange="sauvegarder()" /></td>
+            <td><input type="number" step="0.01" min="0" value="${data.prix}" onchange="sauvegarder()" /></td>
+            <td><input type="checkbox" ${data.coche ? 'checked' : ''} onchange="sauvegarder()" /></td>
+          `;
+        });
+      });
+      sauvegarder();
+    }
+
+    window.onload = charger;
+  </script>
+</body>
+</html>
