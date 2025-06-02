@@ -1,39 +1,88 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Budget Global</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, sans-serif;
       padding: 20px;
+      background-color: #eefafc; /* fond très clair */
+      color: #333;
+      margin: 0;
     }
-    h1, h2 {
-      color: #2c3e50;
+
+    h1 {
+      color: #e67e22; /* orange */
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
+      color: #333;
     }
+
     th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+      padding: 10px;
       text-align: left;
+      font-size: 1em;
+      background-color: transparent; /* plus de fond coloré */
     }
+
     th {
-      background-color: #ecf0f1;
+      background-color: #e67e22; /* orange */
+      color: white;
     }
+
     input[type="number"] {
       width: 100px;
+      padding: 5px;
+      font-family: Calibri, sans-serif;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #333;
+      background-color: white;
     }
+
     .total {
       font-weight: bold;
+      color: #e67e22; /* orange */
+      font-size: 1.1em;
+    }
+
+    #btn-accueil {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background-color: #27ae60; /* vert */
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      z-index: 1000;
+    }
+
+    #btn-accueil:hover {
+      background-color: #1e8449;
     }
   </style>
 </head>
 <body>
-  <h1>Budget Global</h1>
+  <a id="btn-accueil" href="index.html" title="Accueil">🏠 Accueil</a>
+  <h1>💰 Budget Global</h1>
+
   <table>
     <thead>
       <tr>
@@ -41,8 +90,7 @@
         <th>Montant (€)</th>
       </tr>
     </thead>
-    <tbody id="budget-rows">
-    </tbody>
+    <tbody id="budget-rows"></tbody>
     <tfoot>
       <tr>
         <td class="total">Total général</td>
@@ -74,12 +122,14 @@
         let montant = 0;
 
         if (cat.manuel) {
+          const savedValue = parseFloat(localStorage.getItem("divers") || 0);
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${cat.nom}</td>
-            <td><input type="number" value="0" onchange="sauverDivers(this)" /></td>
+            <td><input type="number" value="${savedValue}" onchange="sauverDivers(this)" /></td>
           `;
           tbody.appendChild(row);
+          total += savedValue;
           return;
         }
 
@@ -103,15 +153,6 @@
         tbody.appendChild(row);
         total += montant;
       });
-
-      const divers = parseFloat(localStorage.getItem("divers") || 0);
-      total += divers;
-      const rowDivers = document.createElement('tr');
-      rowDivers.innerHTML = `
-        <td>Divers / Imprévus</td>
-        <td>${divers.toFixed(2)} €</td>
-      `;
-      tbody.appendChild(rowDivers);
 
       document.getElementById('total-global').textContent = total.toFixed(2) + " €";
     }

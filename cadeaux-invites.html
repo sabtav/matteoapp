@@ -3,28 +3,37 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cadeaux des invités - 18 ans de Mathéo</title>
+<title>Cadeaux des invités - 18 ans de Mattéo</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: Calibri, sans-serif;
     margin: 20px;
+    color: #2c8c84; /* bleu-vert */
+    background-color: #fff;
   }
   h1 {
     text-align: center;
-  }
-  #photoSection {
-    margin-bottom: 30px;
-    text-align: center;
-  }
-  #photoSection input[type="text"] {
-    width: 80%;
+    color: #f07c29; /* orange */
     margin-bottom: 10px;
   }
-  #photoPreview {
-    max-width: 300px;
-    max-height: 200px;
-    object-fit: contain;
-    border: 1px solid #ccc;
+  #homeBtn {
+    display: inline-block;
+    float: left;
+    margin: 0 0 30px 0;
+    padding: 10px 25px;
+    font-size: 1rem;
+    background-color: #2c8c84; /* bleu-vert */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: auto;
+  }
+  #homeBtn:hover {
+    background-color: #1f615b;
   }
   table {
     width: 100%;
@@ -32,42 +41,58 @@
     margin-top: 10px;
   }
   th, td {
-    border: 1px solid #333;
+    border: 1px solid #2c8c84; /* bleu-vert */
     padding: 8px;
     text-align: center;
   }
   th {
-    background-color: #eee;
+    background-color: #f07c29; /* orange */
+    color: white;
   }
   input[type="text"], input[type="number"] {
     width: 90%;
     box-sizing: border-box;
+    font-family: Calibri, sans-serif;
   }
   input[type="checkbox"] {
     width: 20px;
     height: 20px;
+    cursor: pointer;
   }
   #totalPrice {
     font-weight: bold;
     margin-top: 15px;
     font-size: 1.2rem;
+    color: #f07c29; /* orange */
   }
   #addRowBtn {
     margin-top: 15px;
     padding: 8px 16px;
     font-size: 1rem;
+    background-color: #f07c29; /* orange */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #addRowBtn:hover {
+    background-color: #c15e1e;
+  }
+  /* Clear float */
+  #buttonContainer::after {
+    content: "";
+    display: block;
+    clear: both;
   }
 </style>
 </head>
 <body>
 
-<h1>Cadeaux des invités - 18 ans de Mathéo</h1>
+<h1>Cadeaux des invités - 18 ans de Mattéo</h1>
 
-<div id="photoSection">
-  <h2>Photo du produit choisi</h2>
-  <input type="text" id="photoURL" placeholder="Colle ici l'URL de la photo" />
-  <br />
-  <img id="photoPreview" src="" alt="Photo produit" />
+<div id="buttonContainer">
+  <button id="homeBtn" onclick="location.href='index.html'">Accueil</button>
 </div>
 
 <table id="giftsTable">
@@ -94,13 +119,10 @@
 <script>
   const giftsTableBody = document.querySelector("#giftsTable tbody");
   const totalPriceDiv = document.getElementById("totalPrice");
-  const photoURLInput = document.getElementById("photoURL");
-  const photoPreview = document.getElementById("photoPreview");
   const addRowBtn = document.getElementById("addRowBtn");
 
   // Récupération des données depuis localStorage
   let gifts = JSON.parse(localStorage.getItem("giftsList")) || [];
-  let photoURL = localStorage.getItem("giftPhotoURL") || "";
 
   function calculateTotalGlobal() {
     let total = 0;
@@ -212,16 +234,7 @@
 
   function saveData() {
     localStorage.setItem("giftsList", JSON.stringify(gifts));
-    localStorage.setItem("giftPhotoURL", photoURLInput.value);
   }
-
-  photoURLInput.value = photoURL;
-  photoPreview.src = photoURL;
-
-  photoURLInput.addEventListener("input", () => {
-    photoPreview.src = photoURLInput.value;
-    saveData();
-  });
 
   addRowBtn.addEventListener("click", () => {
     gifts.push({name:"", quantity:0, price:0, bought:false});

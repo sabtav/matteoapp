@@ -4,28 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Liste des invités</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
-
   <style>
     body {
-      font-family: 'Dancing Script', cursive;
-      background-color: #fefefe;
+      font-family: Calibri, sans-serif;
+      background-color: #fffdf5;
       padding: 20px;
       color: #333;
+      position: relative; /* pour positionner le bouton accueil */
+    }
+
+    /* Bouton Accueil en haut à gauche */
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+      background-color: #f2f2f2;
+      color: #333;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-family: Calibri, sans-serif;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
+      z-index: 10;
+    }
+
+    .home-btn:hover {
+      background-color: #e0e0e0;
     }
 
     h1 {
       text-align: center;
       font-size: 2.5em;
+      color: #ff6600;
       margin-bottom: 30px;
     }
 
-    form {
-      background-color: #f9f9f9;
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    form, #totalsBox {
+      background-color: #e6f9ff;
       padding: 20px;
       border-radius: 12px;
-      max-width: 600px;
-      margin: 0 auto 30px auto;
+      max-width: 500px;
+      flex: 1 1 300px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
@@ -37,16 +66,25 @@
     }
 
     label {
+      color: #006666;
+      font-size: 0.95em;
+    }
+
+    /* Correction largeur labels et inputs prénom et nom */
+    .form-row:first-child label {
       flex: 1 1 45%;
-      min-width: 120px;
+      min-width: 140px;
     }
 
     input[type="text"], select {
       width: 100%;
-      padding: 8px;
+      padding: 6px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-family: 'Dancing Script', cursive;
+      font-family: Calibri, sans-serif;
+      background-color: #fffaf0;
+      font-size: 0.95em;
+      box-sizing: border-box;
     }
 
     input[type="checkbox"] {
@@ -61,6 +99,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 1em;
+      font-family: Calibri, sans-serif;
     }
 
     button:hover {
@@ -71,69 +110,118 @@
       font-size: 0.75em;
       padding: 4px 8px;
       margin-right: 4px;
+      border-radius: 6px;
+    }
+
+    .editBtn {
+      background-color: #ffa500;
+      color: white;
+      border: none;
+    }
+
+    .deleteBtn {
+      background-color: #2196F3;
+      color: white;
+      border: none;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      font-family: Calibri, sans-serif;
     }
 
     th, td {
       border: 1px solid #ccc;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
+      background-color: #fdfdfd;
+    }
+
+    th {
+      background-color: #cce5ff;
+      color: #003366;
     }
 
     #printBtn {
       margin: 20px auto;
       display: block;
-      background-color: #2196F3;
+      background-color: #ff6600;
+      color: white;
+    }
+
+    #printBtn:hover {
+      background-color: #e65c00;
+    }
+
+    #totalsBox {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background-color: #e6f9ff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 200px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     #totals {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 1.2em;
+      font-size: 1.1em;
+      color: #006600;
+      line-height: 1.6;
     }
 
     @media screen and (max-width: 600px) {
       label {
         flex: 1 1 100%;
       }
+
+      .container {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
 
 <body>
+  <a href="index.html" class="home-btn">🏠 Accueil</a>
+
   <h1>Liste des invités</h1>
 
-  <form id="inviteForm">
-    <div class="form-row">
-      <label>
-        Prénom :
-        <input type="text" id="prenom" required>
-      </label>
-      <label>
-        Nom :
-        <input type="text" id="nom" required>
-      </label>
+  <div class="container">
+    <form id="inviteForm">
+      <div class="form-row">
+        <label>
+          Prénom :
+          <input type="text" id="prenom" required>
+        </label>
+        <label>
+          Nom :
+          <input type="text" id="nom" required>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>
+          Type :
+          <select id="type">
+            <option value="Adulte">Adulte</option>
+            <option value="Enfant">Enfant</option>
+          </select>
+        </label>
+        <label>
+          Présent :
+          <input type="checkbox" id="present">
+        </label>
+      </div>
+      <button type="submit" id="addBtn">Ajouter un invité</button>
+    </form>
+
+    <div id="totalsBox">
+      <div id="totals"></div>
     </div>
-    <div class="form-row">
-      <label>
-        Type :
-        <select id="type">
-          <option value="Adulte">Adulte</option>
-          <option value="Enfant">Enfant</option>
-        </select>
-      </label>
-      <label>
-        Présent :
-        <input type="checkbox" id="present">
-      </label>
-    </div>
-    <button type="submit" id="addBtn">Ajouter un invité</button>
-  </form>
+  </div>
 
   <table id="inviteTable">
     <thead>
@@ -147,8 +235,6 @@
     </thead>
     <tbody></tbody>
   </table>
-
-  <div id="totals"></div>
 
   <button id="printBtn">Imprimer la liste</button>
 
@@ -189,8 +275,8 @@
       const enfants = invites.filter(i => i.present && i.type === "Enfant").length;
 
       totalsDiv.innerHTML = `
-        Total invités : <strong>${total}</strong><br>
-        Présents - Adultes : <strong>${adultes}</strong> | Enfants : <strong>${enfants}</strong>
+        <strong>Adultes présents :</strong> ${adultes}<br>
+        <strong>Enfants présents :</strong> ${enfants}
       `;
     }
 

@@ -6,56 +6,89 @@
   <title>Cadeaux de Mattéo</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Calibri', sans-serif;
       margin: 20px;
-      background: #f7f7f7;
+      background: #fdfcfb;
+      position: relative;
     }
     h1 {
       text-align: center;
-      color: #2c3e50;
+      color: #d35400;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       background: #fff;
+      font-family: 'Calibri', sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       padding: 8px 10px;
       text-align: left;
     }
     th {
-      background-color: #3498db;
+      background-color: #f39c12;
       color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #fef5e7;
+    }
+    tr:hover {
+      background-color: #fdebd0;
     }
     input[type="text"] {
       width: 90%;
       padding: 5px;
       font-size: 1rem;
+      font-family: 'Calibri', sans-serif;
     }
     input[type="checkbox"] {
       transform: scale(1.3);
       cursor: pointer;
     }
     button.deleteBtn {
-      background-color: #e74c3c;
+      background-color: #e67e22;
       color: white;
       border: none;
       padding: 5px 10px;
       cursor: pointer;
       font-size: 0.9rem;
       border-radius: 4px;
+      font-family: 'Calibri', sans-serif;
     }
     button.deleteBtn:hover {
-      background-color: #c0392b;
+      background-color: #d35400;
     }
     .container {
       max-width: 700px;
-      margin: 0 auto;
+      margin: 60px auto 0;
+    }
+
+    /* Bouton Accueil */
+    .btn-home {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+      background-color: #f39c12;
+      color: white;
+      padding: 8px 12px;
+      font-family: 'Calibri', sans-serif;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.2s ease;
+    }
+    .btn-home:hover {
+      background-color: #e67e22;
     }
   </style>
 </head>
 <body>
+  <!-- Bouton accueil -->
+  <a href="index.html" class="btn-home">🏠 Accueil</a>
+
   <div class="container">
     <h1>Cadeaux de Mattéo</h1>
     <table id="cadeauTable">
@@ -77,13 +110,11 @@
     const tbody = document.querySelector('#cadeauTable tbody');
     const LOCAL_STORAGE_KEY = "cadeaux-matteo";
 
-    // Charger les données du localStorage
     function loadData() {
       const saved = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
       return saved;
     }
 
-    // Sauvegarder dans le localStorage
     function saveData() {
       const rows = Array.from(tbody.querySelectorAll('tr')).map(row => {
         return {
@@ -94,7 +125,6 @@
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
     }
 
-    // Met à jour les numéros après suppression
     function updateRowNumbers() {
       const rows = tbody.querySelectorAll('tr');
       rows.forEach((row, index) => {
@@ -103,16 +133,13 @@
       saveData();
     }
 
-    // Créer une ligne
     function createRow(index, cadeau = "", coche = false) {
       const tr = document.createElement('tr');
 
-      // Numéro
       const tdNum = document.createElement('td');
       tdNum.textContent = index + 1;
       tr.appendChild(tdNum);
 
-      // Champ texte cadeau
       const tdCadeau = document.createElement('td');
       const inputCadeau = document.createElement('input');
       inputCadeau.type = 'text';
@@ -122,7 +149,6 @@
       tdCadeau.appendChild(inputCadeau);
       tr.appendChild(tdCadeau);
 
-      // Case à cocher acheté
       const tdAchat = document.createElement('td');
       const inputAchat = document.createElement('input');
       inputAchat.type = 'checkbox';
@@ -132,7 +158,6 @@
       tdAchat.appendChild(inputAchat);
       tr.appendChild(tdAchat);
 
-      // Bouton supprimer
       const tdDelete = document.createElement('td');
       tdDelete.style.textAlign = 'center';
       const btnDelete = document.createElement('button');
@@ -148,7 +173,6 @@
       tbody.appendChild(tr);
     }
 
-    // Initialisation
     const savedData = loadData();
     for (let i = 0; i < 18; i++) {
       const data = savedData[i] || { cadeau: "", coche: false };

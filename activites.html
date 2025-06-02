@@ -1,267 +1,161 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Activités - Organisation des 18 ans de Mattéo</title>
-<style>
-  body {
-    font-family: Calibri, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 20px;
-    background-color: #fafafa;
-  }
-  h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-  }
-  section {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 6px #ccc;
-    padding: 20px;
-    margin-bottom: 30px;
-  }
-  h2 {
-    margin-top: 0;
-    color: #007acc;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  p.description {
-    font-style: italic;
-    margin-bottom: 15px;
-    color: #555;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-    font-family: Calibri, sans-serif;
-  }
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  th {
-    background-color: #007acc;
-    color: white;
-  }
-  td input[type="checkbox"] {
-    transform: scale(1.2);
-    margin-left: 5px;
-  }
-  button.add-row {
-    background-color: #007acc;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-family: Calibri, sans-serif;
-  }
-  button.add-row:hover {
-    background-color: #005fa3;
-  }
-  .activity-header {
-    flex-grow: 1;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadeaux de Mattéo</title>
+  <style>
+    body {
+      font-family: 'Calibri', sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2a365;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    input[type="text"] {
+      width: 90%;
+      padding: 4px;
+      font-family: 'Calibri', sans-serif;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+    button.deleteBtn {
+      background-color: #ff7f50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: 'Calibri', sans-serif;
+    }
+    button.deleteBtn:hover {
+      background-color: #e06645;
+    }
+
+    /* Bouton Accueil en haut à gauche */
+    .btn-home {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: #f39c12;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-family: 'Calibri', sans-serif;
+      font-size: 14px;
+    }
+    .btn-home:hover {
+      background-color: #e67e22;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Organisation des 18 ans de Mattéo - Activités</h1>
+  <!-- Bouton Accueil -->
+  <a href="index.html" class="btn-home">🏠 Accueil</a>
 
-<section id="beer-pong">
-  <h2>
-    <span class="activity-header">Beer Pong</span>
-    <label title="Matériel complet ?">
-      Matériel complet <input type="checkbox" class="complete-checkbox" />
-    </label>
-  </h2>
-  <p class="description">Deux équipes. Chacun lance une balle de ping-pong dans les gobelets adverses.</p>
-  <table id="beer-pong-table">
+  <h1>Cadeaux de Mattéo</h1>
+  <table id="cadeauTable">
     <thead>
       <tr>
-        <th>Matériel nécessaire</th>
-        <th>Matériel prêt <input type="checkbox" disabled /></th>
+        <th>#</th>
+        <th>Cadeau</th>
+        <th>Acheté</th>
+        <th>Supprimer</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td contenteditable="true">Gobelets rouges</td>
-        <td><input type="checkbox" class="item-checkbox" /></td>
-      </tr>
-      <tr>
-        <td contenteditable="true">Balles de ping-pong</td>
-        <td><input type="checkbox" class="item-checkbox" /></td>
-      </tr>
+      <!-- Lignes générées par JavaScript -->
     </tbody>
   </table>
-  <button class="add-row" onclick="addRow('beer-pong-table')">Ajouter une ligne</button>
-</section>
 
-<section id="banana-twerk">
-  <h2>
-    <span class="activity-header">Banana Twerk</span>
-    <label title="Matériel complet ?">
-      Matériel complet <input type="checkbox" class="complete-checkbox" />
-    </label>
-  </h2>
-  <p class="description">Une banane accrochée à la taille avec des balles de ping-pong dedans que l'on doit faire tomber.</p>
-  <table id="banana-twerk-table">
-    <thead>
-      <tr>
-        <th>Matériel nécessaire</th>
-        <th>Matériel prêt <input type="checkbox" disabled /></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td contenteditable="true">Banane factice</td>
-        <td><input type="checkbox" class="item-checkbox" /></td>
-      </tr>
-      <tr>
-        <td contenteditable="true">Balles de ping-pong</td>
-        <td><input type="checkbox" class="item-checkbox" /></td>
-      </tr>
-    </tbody>
-  </table>
-  <button class="add-row" onclick="addRow('banana-twerk-table')">Ajouter une ligne</button>
-</section>
+  <script>
+    const tbody = document.querySelector('#cadeauTable tbody');
+    const LOCAL_STORAGE_KEY = "cadeaux-matteo";
 
-<section id="tic-tac-toe">
-  <h2>
-    <span class="activity-header">Tic-Tac-Toe / Morpion</span>
-    <label title="Matériel complet ?">
-      Matériel complet <input type="checkbox" class="complete-checkbox" />
-    </label>
-  </h2>
-  <p class="description">Jeu en relais sur une grille géante pour faire une ligne avant l'autre.</p>
-  <table id="tic-tac-toe-table">
-    <thead>
-      <tr>
-        <th>Matériel nécessaire</th>
-        <th>Matériel prêt <input type="checkbox" disabled /></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td contenteditable="true">Grille géante</td>
-        <td><input type="checkbox" class="item-checkbox" /></td>
-      </tr>
-      <tr>
-        <td contenteditable="true">Marqueurs (X et O)</td>
-        <td><input type="checkbox" class="item-checkbox" /></td>
-      </tr>
-    </tbody>
-  </table>
-  <button class="add-row" onclick="addRow('tic-tac-toe-table')">Ajouter une ligne</button>
-</section>
-
-<script>
-function addRow(tableId) {
-  const tbody = document.getElementById(tableId).querySelector('tbody');
-  const newRow = tbody.insertRow();
-
-  const cell1 = newRow.insertCell(0);
-  cell1.contentEditable = "true";
-  cell1.style.backgroundColor = "#f9f9f9";
-  cell1.innerText = "";
-
-  const cell2 = newRow.insertCell(1);
-  const checkbox = document.createElement('input');
-  checkbox.type = "checkbox";
-  checkbox.classList.add('item-checkbox');
-  cell2.appendChild(checkbox);
-
-  cell1.addEventListener('input', saveAllData);
-  checkbox.addEventListener('change', saveAllData);
-  saveAllData();
-}
-
-function saveAllData() {
-  const sections = ['beer-pong', 'banana-twerk', 'tic-tac-toe'];
-  sections.forEach(sectionId => {
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-
-    const completeCheckbox = section.querySelector('.complete-checkbox');
-    const completeKey = sectionId + '-complete';
-    localStorage.setItem(completeKey, completeCheckbox.checked);
-
-    const table = section.querySelector('table');
-    const rows = table.querySelectorAll('tbody tr');
-    let rowsData = [];
-    rows.forEach(row => {
-      const cells = row.querySelectorAll('td');
-      const text = cells[0].innerText.trim();
-      const checked = cells[1].querySelector('input[type="checkbox"]').checked;
-      rowsData.push({ text, checked });
-    });
-    const tableKey = sectionId + '-table';
-    localStorage.setItem(tableKey, JSON.stringify(rowsData));
-  });
-}
-
-function loadAllData() {
-  const sections = ['beer-pong', 'banana-twerk', 'tic-tac-toe'];
-  sections.forEach(sectionId => {
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-
-    const completeCheckbox = section.querySelector('.complete-checkbox');
-    const completeKey = sectionId + '-complete';
-    const completeVal = localStorage.getItem(completeKey);
-    completeCheckbox.checked = (completeVal === 'true');
-
-    const table = section.querySelector('table');
-    const tbody = table.querySelector('tbody');
-    const tableKey = sectionId + '-table';
-    const rowsDataJSON = localStorage.getItem(tableKey);
-    if (rowsDataJSON) {
-      const rowsData = JSON.parse(rowsDataJSON);
-      tbody.innerHTML = '';
-      rowsData.forEach(data => {
-        const newRow = tbody.insertRow();
-        const cell1 = newRow.insertCell(0);
-        cell1.contentEditable = "true";
-        cell1.style.backgroundColor = "#f9f9f9";
-        cell1.innerText = data.text;
-
-        const cell2 = newRow.insertCell(1);
-        const checkbox = document.createElement('input');
-        checkbox.type = "checkbox";
-        checkbox.classList.add('item-checkbox');
-        checkbox.checked = data.checked;
-        cell2.appendChild(checkbox);
-
-        cell1.addEventListener('input', saveAllData);
-        checkbox.addEventListener('change', saveAllData);
-      });
+    function loadData() {
+      const saved = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
+      return saved;
     }
-  });
-}
 
-window.addEventListener('load', () => {
-  loadAllData();
+    function saveData() {
+      const rows = Array.from(tbody.querySelectorAll('tr')).map(row => {
+        return {
+          cadeau: row.querySelector('input[type="text"]').value,
+          coche: row.querySelector('input[type="checkbox"]').checked
+        };
+      });
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
+    }
 
-  document.querySelectorAll('td[contenteditable="true"]').forEach(cell => {
-    cell.addEventListener('input', saveAllData);
-  });
+    function updateRowNumbers() {
+      const rows = tbody.querySelectorAll('tr');
+      rows.forEach((row, index) => {
+        row.children[0].textContent = index + 1;
+      });
+      saveData();
+    }
 
-  document.querySelectorAll('input.item-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', saveAllData);
-  });
+    function createRow(index, cadeau = "", coche = false) {
+      const tr = document.createElement('tr');
 
-  document.querySelectorAll('.complete-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', saveAllData);
-  });
-});
-</script>
+      const tdNum = document.createElement('td');
+      tdNum.textContent = index + 1;
+      tr.appendChild(tdNum);
 
+      const tdCadeau = document.createElement('td');
+      const inputCadeau = document.createElement('input');
+      inputCadeau.type = 'text';
+      inputCadeau.placeholder = 'Saisir un cadeau';
+      inputCadeau.value = cadeau;
+      inputCadeau.addEventListener('input', saveData);
+      tdCadeau.appendChild(inputCadeau);
+      tr.appendChild(tdCadeau);
+
+      const tdAchat = document.createElement('td');
+      const inputAchat = document.createElement('input');
+      inputAchat.type = 'checkbox';
+      inputAchat.checked = coche;
+      inputAchat.addEventListener('change', saveData);
+      tdAchat.style.textAlign = 'center';
+      tdAchat.appendChild(inputAchat);
+      tr.appendChild(tdAchat);
+
+      const tdDelete = document.createElement('td');
+      tdDelete.style.textAlign = 'center';
+      const btnDelete = document.createElement('button');
+      btnDelete.className = 'deleteBtn';
+      btnDelete.textContent = 'Supprimer';
+      btnDelete.addEventListener('click', () => {
+        tr.remove();
+        updateRowNumbers();
+      });
+      tdDelete.appendChild(btnDelete);
+      tr.appendChild(tdDelete);
+
+      tbody.appendChild(tr);
+    }
+
+    const savedData = loadData();
+    for (let i = 0; i < 18; i++) {
+      const data = savedData[i] || { cadeau: "", coche: false };
+      createRow(i, data.cadeau, data.coche);
+    }
+  </script>
 </body>
 </html>

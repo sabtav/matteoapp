@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Suivi des Boissons</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, sans-serif;
       padding: 20px;
       background-color: #eefafc;
+      color: #333;
     }
     h1 {
       text-align: center;
-      color: #006080;
+      color: #e67e22; /* orange */
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      color: #333;
     }
     th, td {
       border: 1px solid #ccc;
@@ -24,28 +26,65 @@
       text-align: center;
     }
     th {
-      background-color: #d9f0f7;
+      background-color: #e67e22; /* orange */
+      color: white;
+    }
+    tbody tr {
+      /* Pas de fond coloré ici */
+      background-color: transparent;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 90%;
+      padding: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      color: #333;
+      background-color: white;
     }
     button {
       margin-top: 10px;
       padding: 8px 16px;
-      background-color: #006080;
+      background-color: #e67e22; /* orange */
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-size: 1em;
     }
     button:hover {
-      background-color: #0089a8;
+      background-color: #cf6a14;
     }
     .total {
       margin-top: 15px;
       font-weight: bold;
       font-size: 1.2em;
+      color: #e67e22;
+    }
+    #btn-accueil {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background-color: #27ae60; /* vert */
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    #btn-accueil:hover {
+      background-color: #1e8449;
     }
   </style>
 </head>
 <body>
+  <a id="btn-accueil" href="index.html" title="Accueil">🏠 Accueil</a>
   <h1>Suivi des Boissons</h1>
 
   <table>
@@ -55,6 +94,7 @@
         <th>Quantité</th>
         <th>Prix unitaire (€)</th>
         <th>Acheté</th>
+        <th>Prix total (€)</th>
       </tr>
     </thead>
     <tbody id="table-body"></tbody>
@@ -66,14 +106,18 @@
 
   <script>
     function ajouterLigne() {
-      const table = document.getElementById('table-body');
-      const row = table.insertRow();
-      row.innerHTML = `
+      const tbody = document.getElementById('table-body');
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
         <td><input type="text" onchange="sauvegarder()" /></td>
-        <td><input type="number" min="0" onchange="sauvegarder()" /></td>
-        <td><input type="number" step="0.01" min="0" onchange="sauvegarder()" /></td>
+        <td><input type="number" min="0" value="0" onchange="sauvegarder()" /></td>
+        <td><input type="number" step="0.01" min="0" value="0.00" onchange="sauvegarder()" /></td>
         <td><input type="checkbox" onchange="sauvegarder()" /></td>
+        <td class="prix-total">0.00</td>
       `;
+
+      tbody.appendChild(tr);
       sauvegarder();
     }
 
@@ -86,8 +130,10 @@
         const qte = parseFloat(table.rows[i].cells[1].querySelector('input').value) || 0;
         const prix = parseFloat(table.rows[i].cells[2].querySelector('input').value) || 0;
         const coche = table.rows[i].cells[3].querySelector('input').checked;
+        const prixTotal = qte * prix;
+        table.rows[i].cells[4].textContent = prixTotal.toFixed(2);
         lignes.push({ nom, qte, prix, coche });
-        if (coche) total += qte * prix;
+        if (coche) total += prixTotal;
       }
       localStorage.setItem('boissons-produits', JSON.stringify(lignes));
       document.getElementById('total').textContent = total.toFixed(2);
@@ -97,13 +143,16 @@
       const lignes = JSON.parse(localStorage.getItem('boissons-produits') || '[]');
       const table = document.getElementById('table-body');
       lignes.forEach(data => {
-        const row = table.insertRow();
+        const row = document.createElement('tr');
+        const prixTotal = data.qte * data.prix;
         row.innerHTML = `
           <td><input type="text" value="${data.nom}" onchange="sauvegarder()" /></td>
           <td><input type="number" min="0" value="${data.qte}" onchange="sauvegarder()" /></td>
           <td><input type="number" step="0.01" min="0" value="${data.prix}" onchange="sauvegarder()" /></td>
           <td><input type="checkbox" ${data.coche ? 'checked' : ''} onchange="sauvegarder()" /></td>
+          <td class="prix-total">${prixTotal.toFixed(2)}</td>
         `;
+        table.appendChild(row);
       });
       sauvegarder();
     }

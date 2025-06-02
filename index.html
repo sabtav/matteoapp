@@ -2,44 +2,55 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Organisation des 18 ans de Mattéo</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
     :root {
-      --primary-color: #e67e22;
-      --text-color: #2c3e50;
-      --bg-color: #fefefe;
-      --card-bg: #f9f9f9;
+      --orange: #e67e22;
+      --bluegreen: #2c8c7a;
+      --bluegreen-dark: #1f5f4b;
+      --text-color: #264c47;
+      --bg-color: #fff9f2; /* très clair avec un soupçon d'orange */
+      --card-bg: #f0f7f5; /* bleu-vert pâle */
+      --shadow-light: rgba(44, 140, 122, 0.15);
+      --shadow-hover: rgba(230, 126, 34, 0.3);
+      --border-radius: 12px;
     }
 
+    /* Polices */
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Calibri", Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
       margin: 0;
       padding: 20px;
       background-color: var(--bg-color);
       color: var(--text-color);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
     h1 {
-      font-size: 2em;
-      color: var(--primary-color);
+      font-size: 2.4rem;
+      color: var(--orange);
+      font-weight: 700;
+      line-height: 1.2;
+      text-shadow: 1px 1px 2px var(--shadow-light);
     }
 
-    nav {
-      max-width: 900px;
+    main {
+      max-width: 960px;
       margin: 0 auto;
     }
 
     nav ul {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
       list-style: none;
       padding: 0;
       margin: 0;
@@ -47,27 +58,54 @@
 
     nav ul li {
       background-color: var(--card-bg);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px 15px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 14px var(--shadow-light);
       text-align: center;
-      transition: transform 0.2s, background-color 0.3s;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+      cursor: pointer;
+      user-select: none;
     }
 
-    nav ul li:hover {
-      background-color: #fff3e6;
-      transform: translateY(-5px);
+    nav ul li:hover,
+    nav ul li:focus-within {
+      background-color: #fff3e0;
+      box-shadow: 0 10px 20px var(--shadow-hover);
+      transform: translateY(-6px);
     }
 
     nav ul li a {
+      display: block;
       text-decoration: none;
-      color: var(--text-color);
-      font-weight: bold;
-      font-size: 1.05em;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--bluegreen-dark);
+      transition: color 0.3s ease;
+      outline-offset: 4px;
+      outline-color: transparent;
     }
 
-    nav ul li a:hover {
-      color: var(--primary-color);
+    nav ul li a:hover,
+    nav ul li a:focus {
+      color: var(--orange);
+      outline-color: var(--orange);
+      outline-style: solid;
+      outline-width: 2px;
+      border-radius: 6px;
+    }
+
+    /* Responsive - un peu plus grand sur petits écrans */
+    @media (max-width: 400px) {
+      nav ul {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      nav ul li {
+        padding: 18px 12px;
+      }
+      nav ul li a {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>

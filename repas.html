@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Repas</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, sans-serif;
       padding: 20px;
       background-color: #f8f9fa;
     }
     h1, h2 {
-      color: #006080;
+      color: #00796B; /* Bleu-vert */
     }
     table {
       width: 100%;
@@ -23,19 +23,22 @@
       text-align: center;
     }
     th {
-      background-color: #d9f0f7;
+      background-color: #FF9800; /* Orange */
+      color: white;
     }
     button {
       margin: 10px 0;
       padding: 6px 12px;
-      background-color: #006080;
+      background-color: #00796B; /* Bleu-vert */
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-family: Calibri, sans-serif;
+      font-size: 1rem;
     }
     button:hover {
-      background-color: #0089a8;
+      background-color: #004D40; /* Ton plus foncé de bleu-vert */
     }
     .total {
       font-weight: bold;
@@ -43,23 +46,38 @@
     }
     hr {
       margin: 30px 0;
+      border: 1px solid #ccc;
+    }
+    .accueil-btn {
+      background-color: #FF9800; /* Orange */
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .accueil-btn:hover {
+      background-color: #F57C00; /* Orange foncé */
     }
   </style>
 </head>
 <body>
   <h1>Organisation Repas</h1>
+  <button class="accueil-btn" onclick="window.location.href='index.html'">🏠 Accueil</button>
 
   <div id="categories"></div>
   <h2>Total global : <span id="total-global">0.00</span> €</h2>
 
   <script>
-    const sousCategories = ['Apéritif', 'Repas', 'Fromage', 'Candy Bar'];
+    const sousCategories = [
+      { id: "aperitif", nom: "Apéritif" },
+      { id: "repas", nom: "Repas" },
+      { id: "fromage", nom: "Fromage" },
+      { id: "candybar", nom: "Candy Bar" }
+    ];
 
-    function creerSection(nom) {
+    function creerSection(cat) {
       const div = document.createElement('div');
       div.innerHTML = `
-        <h2>${nom}</h2>
-        <table id="table-${nom}">
+        <h2>${cat.nom}</h2>
+        <table id="table-${cat.id}">
           <thead>
             <tr>
               <th>Nom du produit</th>
@@ -70,15 +88,15 @@
           </thead>
           <tbody></tbody>
         </table>
-        <button onclick="ajouterLigne('${nom}')">Ajouter une ligne</button>
-        <div class="total">Total ${nom} : <span id="total-${nom}">0.00</span> €</div>
+        <button onclick="ajouterLigne('${cat.id}')">Ajouter une ligne</button>
+        <div class="total">Total ${cat.nom} : <span id="total-${cat.id}">0.00</span> €</div>
         <hr>
       `;
       document.getElementById('categories').appendChild(div);
     }
 
-    function ajouterLigne(nom) {
-      const table = document.querySelector(`#table-${nom} tbody`);
+    function ajouterLigne(id) {
+      const table = document.querySelector(`#table-${id} tbody`);
       const row = table.insertRow();
       row.innerHTML = `
         <td><input type="text" onchange="sauvegarder()" /></td>
@@ -92,7 +110,7 @@
     function sauvegarder() {
       let totalGlobal = 0;
       sousCategories.forEach(cat => {
-        const table = document.querySelector(`#table-${cat} tbody`);
+        const table = document.querySelector(`#table-${cat.id} tbody`);
         const lignes = [];
         let total = 0;
         for (let i = 0; i < table.rows.length; i++) {
@@ -103,8 +121,8 @@
           lignes.push({ nom, qte, prix, coche });
           if (coche) total += qte * prix;
         }
-        localStorage.setItem(`repas-${cat}`, JSON.stringify(lignes));
-        document.getElementById(`total-${cat}`).textContent = total.toFixed(2);
+        localStorage.setItem(`repas-${cat.id}`, JSON.stringify(lignes));
+        document.getElementById(`total-${cat.id}`).textContent = total.toFixed(2);
         totalGlobal += total;
       });
       document.getElementById('total-global').textContent = totalGlobal.toFixed(2);
@@ -113,8 +131,8 @@
     function charger() {
       sousCategories.forEach(cat => {
         creerSection(cat);
-        const lignes = JSON.parse(localStorage.getItem(`repas-${cat}`) || '[]');
-        const table = document.querySelector(`#table-${cat} tbody`);
+        const lignes = JSON.parse(localStorage.getItem(`repas-${cat.id}`) || '[]');
+        const table = document.querySelector(`#table-${cat.id} tbody`);
         lignes.forEach(data => {
           const row = table.insertRow();
           row.innerHTML = `

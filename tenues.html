@@ -6,57 +6,116 @@
 <title>Tenues - Liste des achats</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: Calibri, sans-serif;
     margin: 20px;
+    background-color: #f8f9fa;
   }
   h1 {
     text-align: center;
+    color: #00796B; /* bleu-vert */
   }
   section {
     margin-bottom: 40px;
+    border: 2px solid #00796B; /* bleu-vert */
+    padding: 15px;
+    border-radius: 6px;
+    background-color: #ffffff;
+  }
+  h2 {
+    color: #00796B; /* bleu-vert */
   }
   table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    border: 1px solid #00796B; /* bleu-vert */
   }
   th, td {
-    border: 1px solid #333;
+    border: 1px solid #00796B; /* bleu-vert */
     padding: 8px;
     text-align: center;
   }
   th {
-    background-color: #eee;
+    background-color: #FFB74D; /* orange clair */
+    color: #3E2723;
   }
   input[type="text"], input[type="number"] {
     width: 90%;
     box-sizing: border-box;
+    font-family: Calibri, sans-serif;
   }
   input[type="checkbox"] {
     width: 20px;
     height: 20px;
+    cursor: pointer;
   }
   button.addRowBtn {
     margin-top: 10px;
     padding: 6px 12px;
     font-size: 0.9rem;
+    font-family: Calibri, sans-serif;
+    background-color: #FF9800; /* orange */
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button.addRowBtn:hover {
+    background-color: #F57C00; /* orange foncé */
+  }
+  button.deleteBtn {
+    background-color: #FF9800;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button.deleteBtn:hover {
+    background-color: #F57C00;
   }
   .totalPerson {
     font-weight: bold;
     margin-top: 10px;
     font-size: 1.1rem;
+    color: #00796B; /* bleu-vert */
   }
   #totalGlobal {
     font-size: 1.4rem;
     font-weight: bold;
     margin-top: 30px;
     text-align: center;
-    border-top: 2px solid #333;
+    border-top: 2px solid #00796B; /* bleu-vert */
     padding-top: 15px;
+    color: #00796B; /* bleu-vert */
+  }
+  /* Bouton accueil */
+  #btnAccueil {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: #FF9800; /* orange */
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    font-family: Calibri, sans-serif;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+  }
+  #btnAccueil:hover {
+    background-color: #F57C00;
   }
 </style>
 </head>
 <body>
+
+<button id="btnAccueil" onclick="window.location.href='index.html'">🏠 Accueil</button>
 
 <h1>Tenues - Liste des achats</h1>
 
@@ -128,7 +187,7 @@
     const tdDelete = document.createElement("td");
     const btnDelete = document.createElement("button");
     btnDelete.textContent = "X";
-    btnDelete.style.cursor = "pointer";
+    btnDelete.className = "deleteBtn";
     btnDelete.addEventListener("click", () => {
       data[person].splice(index, 1);
       renderPersonSection(person);

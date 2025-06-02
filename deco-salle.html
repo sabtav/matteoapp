@@ -1,231 +1,261 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Liste décoration</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f8f8f8;
-    }
-    h1 {
-      text-align: center;
-    }
-    .form-group {
-      margin-bottom: 10px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 6px;
-      box-sizing: border-box;
-    }
-    .checkbox-group {
-      margin-top: 10px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 16px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button.print-btn {
-      background-color: #28a745;
-      margin-left: 10px;
-    }
-    table {
-      margin-top: 20px;
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-    .totaux {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PDéco de la salle - 18 ans de Mattéo</title>
+<style>
+  body {
+    font-family: Calibri, sans-serif;
+    margin: 20px;
+    color: #2c8c84; /* bleu-vert */
+    background-color: #fff;
+  }
+  h1 {
+    text-align: center;
+    color: #f07c29; /* orange */
+    margin-bottom: 5px;
+  }
+  h2 {
+    text-align: center;
+    color: #2c8c84;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: normal;
+  }
+  #homeBtn {
+    float: left;
+    background-color: #2c8c84; /* bleu-vert */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+  }
+  #homeBtn:hover {
+    background-color: #1f615b;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+  th, td {
+    border: 1px solid #2c8c84;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #f07c29;
+    color: white;
+  }
+  input[type="text"], input[type="number"] {
+    width: 90%;
+    font-family: Calibri, sans-serif;
+    padding: 4px;
+    box-sizing: border-box;
+  }
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  button.deleteBtn {
+    background-color: #f07c29;
+    border: none;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  button.deleteBtn:hover {
+    background-color: #c15e1e;
+  }
+  #addRowBtn {
+    background-color: #f07c29;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #addRowBtn:hover {
+    background-color: #c15e1e;
+  }
+  #totalPrice {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #f07c29;
+    text-align: right;
+    margin-top: 10px;
+  }
+  /* Clear float for button */
+  #buttonContainer::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+</style>
 </head>
 <body>
 
-  <h1>Décoration - Liste des achats</h1>
+<button id="homeBtn" onclick="location.href='index.html'">Accueil</button>
 
-  <div>
-    <div class="form-group">
-      <label for="element">Élément :</label>
-      <input type="text" id="element" />
-    </div>
+<h1>Déco de la salle - 18 ans de Mattéo</h1>
+<h2>Thème : Noir et doré</h2>
 
-    <div class="form-group">
-      <label for="quantite">Quantité :</label>
-      <input type="number" id="quantite" min="1" />
-    </div>
+<table id="giftsTable">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nom du cadeau</th>
+      <th>Quantité</th>
+      <th>Prix unitaire (€)</th>
+      <th>Total (€)</th>
+      <th>Acheté</th>
+      <th>Supprimer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Lignes ajoutées ici -->
+  </tbody>
+</table>
 
-    <div class="form-group">
-      <label for="prix">Prix unitaire (€) :</label>
-      <input type="number" id="prix" min="0" step="0.01" />
-    </div>
+<button id="addRowBtn" type="button">Ajouter une ligne</button>
 
-    <div class="checkbox-group">
-      <label><input type="checkbox" id="achete" /> Acheté</label>
-    </div>
+<div id="totalPrice">Total global : 0.00 €</div>
 
-    <button onclick="ajouterDecoration()">Ajouter</button>
-    <button class="print-btn" onclick="window.print()">Imprimer</button>
-  </div>
+<script>
+  const giftsTableBody = document.querySelector("#giftsTable tbody");
+  const totalPriceDiv = document.getElementById("totalPrice");
+  const addRowBtn = document.getElementById("addRowBtn");
 
-  <table id="liste">
-    <thead>
-      <tr>
-        <th>Élément</th>
-        <th>Quantité</th>
-        <th>Prix unitaire (€)</th>
-        <th>Prix total (€)</th>
-        <th>Acheté</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  let gifts = [];
 
-  <div class="totaux">
-    Total dépenses : <span id="total">0.00</span> €<br />
-    Nombre d’éléments achetés : <span id="totalAchete">0</span>
-  </div>
-
-  <script>
-    function ajouterDecoration() {
-      const element = document.getElementById('element').value.trim();
-      const quantite = parseInt(document.getElementById('quantite').value);
-      const prixUnitaire = parseFloat(document.getElementById('prix').value);
-      const achete = document.getElementById('achete').checked;
-
-      if (!element || isNaN(quantite) || isNaN(prixUnitaire)) {
-        alert("Merci de remplir tous les champs.");
-        return;
+  function calculateTotalGlobal() {
+    let total = 0;
+    gifts.forEach(gift => {
+      if (
+        gift.bought &&
+        gift.quantity && gift.price &&
+        !isNaN(gift.quantity) && !isNaN(gift.price)
+      ) {
+        total += gift.quantity * gift.price;
       }
+    });
+    totalPriceDiv.textContent = "Total global : " + total.toFixed(2) + " €";
+  }
 
-      const prixTotal = quantite * prixUnitaire;
+  function createRow(gift, index) {
+    const row = document.createElement("tr");
 
-      const tbody = document.querySelector("#liste tbody");
-      const tr = document.createElement("tr");
+    // Colonne numéro
+    const tdNum = document.createElement("td");
+    tdNum.textContent = index + 1;
+    row.appendChild(tdNum);
 
-      tr.innerHTML = `
-        <td>${element}</td>
-        <td>${quantite}</td>
-        <td data-prixunitaire="${prixUnitaire}">${prixUnitaire.toFixed(2)}</td>
-        <td data-total="${prixTotal}">${prixTotal.toFixed(2)}</td>
-        <td data-achete="${achete}">${achete ? 'Oui' : 'Non'}</td>
-        <td>
-          <button onclick="modifierLigne(this)">Modifier</button>
-          <button onclick="supprimerLigne(this)">Supprimer</button>
-        </td>
-      `;
+    // Colonne nom cadeau
+    const tdName = document.createElement("td");
+    const inputName = document.createElement("input");
+    inputName.type = "text";
+    inputName.value = gift.name || "";
+    inputName.placeholder = "Nom du cadeau";
+    inputName.addEventListener("input", () => {
+      gift.name = inputName.value;
+    });
+    tdName.appendChild(inputName);
+    row.appendChild(tdName);
 
-      tbody.appendChild(tr);
+    // Colonne quantité
+    const tdQty = document.createElement("td");
+    const inputQty = document.createElement("input");
+    inputQty.type = "number";
+    inputQty.min = 0;
+    inputQty.value = gift.quantity || 0;
+    inputQty.addEventListener("input", () => {
+      gift.quantity = parseInt(inputQty.value) || 0;
+      updateRowTotal(row, gift);
+    });
+    tdQty.appendChild(inputQty);
+    row.appendChild(tdQty);
 
-      document.getElementById('element').value = "";
-      document.getElementById('quantite').value = "";
-      document.getElementById('prix').value = "";
-      document.getElementById('achete').checked = false;
+    // Colonne prix unitaire
+    const tdPrice = document.createElement("td");
+    const inputPrice = document.createElement("input");
+    inputPrice.type = "number";
+    inputPrice.min = 0;
+    inputPrice.step = "0.01";
+    inputPrice.value = gift.price || 0;
+    inputPrice.addEventListener("input", () => {
+      gift.price = parseFloat(inputPrice.value) || 0;
+      updateRowTotal(row, gift);
+    });
+    tdPrice.appendChild(inputPrice);
+    row.appendChild(tdPrice);
 
-      mettreAJourTotaux();
-      enregistrerDansLocalStorage();
-    }
+    // Colonne total ligne
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = (gift.quantity && gift.price) ? (gift.quantity * gift.price).toFixed(2) : "0.00";
+    row.appendChild(tdTotal);
 
-    function supprimerLigne(bouton) {
-      bouton.closest('tr').remove();
-      mettreAJourTotaux();
-      enregistrerDansLocalStorage();
-    }
+    // Colonne checkbox acheté
+    const tdBought = document.createElement("td");
+    const inputBought = document.createElement("input");
+    inputBought.type = "checkbox";
+    inputBought.checked = gift.bought || false;
+    inputBought.addEventListener("change", () => {
+      gift.bought = inputBought.checked;
+      calculateTotalGlobal();
+    });
+    tdBought.appendChild(inputBought);
+    row.appendChild(tdBought);
 
-    function modifierLigne(bouton) {
-      const tr = bouton.closest('tr');
-      const tds = tr.querySelectorAll('td');
+    // Colonne bouton supprimer
+    const tdDelete = document.createElement("td");
+    const btnDelete = document.createElement("button");
+    btnDelete.textContent = "X";
+    btnDelete.className = "deleteBtn";
+    btnDelete.addEventListener("click", () => {
+      gifts.splice(index, 1);
+      renderTable();
+    });
+    tdDelete.appendChild(btnDelete);
+    row.appendChild(tdDelete);
 
-      document.getElementById('element').value = tds[0].textContent;
-      document.getElementById('quantite').value = tds[1].textContent;
-      document.getElementById('prix').value = tds[2].textContent;
-      document.getElementById('achete').checked = tds[4].textContent.trim().toLowerCase() === "oui";
+    return row;
+  }
 
-      tr.remove();
-      mettreAJourTotaux();
-      enregistrerDansLocalStorage();
-    }
+  function updateRowTotal(row, gift) {
+    const tdTotal = row.children[4];
+    const total = (gift.quantity && gift.price) ? (gift.quantity * gift.price).toFixed(2) : "0.00";
+    tdTotal.textContent = total;
+    calculateTotalGlobal();
+  }
 
-    function mettreAJourTotaux() {
-      const lignes = document.querySelectorAll("#liste tbody tr");
-      let total = 0;
-      let achetes = 0;
+  function renderTable() {
+    giftsTableBody.innerHTML = "";
+    gifts.forEach((gift, index) => {
+      giftsTableBody.appendChild(createRow(gift, index));
+    });
+    calculateTotalGlobal();
+  }
 
-      lignes.forEach(ligne => {
-        const prix = parseFloat(ligne.querySelector('[data-total]').dataset.total);
-        const achete = ligne.querySelector('[data-achete]').dataset.achete === "true";
+  addRowBtn.addEventListener("click", () => {
+    gifts.push({ name: "", quantity: 0, price: 0, bought: false });
+    renderTable();
+  });
 
-        if (!isNaN(prix)) total += prix;
-        if (achete) achetes++;
-      });
-
-      document.getElementById('total').textContent = total.toFixed(2);
-      document.getElementById('totalAchete').textContent = achetes;
-    }
-
-    function enregistrerDansLocalStorage() {
-      const lignes = document.querySelectorAll("#liste tbody tr");
-      const donnees = [];
-
-      lignes.forEach(ligne => {
-        const tds = ligne.querySelectorAll("td");
-        donnees.push({
-          element: tds[0].textContent,
-          quantite: parseInt(tds[1].textContent),
-          prixUnitaire: parseFloat(tds[2].dataset.prixunitaire),
-          prixTotal: parseFloat(tds[3].dataset.total),
-          achete: tds[4].dataset.achete === "true"
-        });
-      });
-
-      localStorage.setItem("decorations", JSON.stringify(donnees));
-    }
-
-    function chargerDepuisLocalStorage() {
-      const donnees = JSON.parse(localStorage.getItem("decorations")) || [];
-      donnees.forEach(item => {
-        const tbody = document.querySelector("#liste tbody");
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td>${item.element}</td>
-          <td>${item.quantite}</td>
-          <td data-prixunitaire="${item.prixUnitaire}">${item.prixUnitaire.toFixed(2)}</td>
-          <td data-total="${item.prixTotal}">${item.prixTotal.toFixed(2)}</td>
-          <td data-achete="${item.achete}">${item.achete ? 'Oui' : 'Non'}</td>
-          <td>
-            <button onclick="modifierLigne(this)">Modifier</button>
-            <button onclick="supprimerLigne(this)">Supprimer</button>
-          </td>
-        `;
-
-        tbody.appendChild(tr);
-      });
-
-      mettreAJourTotaux();
-    }
-
-    window.onload = chargerDepuisLocalStorage;
-  </script>
+  // Affiche table vide au démarrage
+  renderTable();
+</script>
 
 </body>
 </html>
