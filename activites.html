@@ -1,161 +1,255 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cadeaux de Mattéo</title>
+  <meta charset="UTF-8">
+  <title>Activités de la soirée</title>
   <style>
     body {
-      font-family: 'Calibri', sans-serif;
-      margin: 20px;
+      font-family: Calibri, sans-serif;
+      background-color: #fff8f0;
+      color: #333;
+      padding: 20px;
     }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .home-btn {
+      border: 2px solid #f57c00;
+      border-radius: 10px;
+      padding: 8px 14px;
+      background-color: #ffe0b2;
+      color: #8a4b00;
+      text-decoration: none;
+      font-size: 1.1em;
+    }
+
     h1 {
-      text-align: center;
+      color: #f57c00;
+      font-size: 2em;
     }
+
+    .complete-checkbox {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #2e7d32;
+    }
+
+    .activity {
+      margin-bottom: 40px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #e0f2f1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #00796b;
+      margin-top: 0;
+    }
+
+    .description {
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-    }
-    th {
-      background-color: #f2a365;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    input[type="text"] {
-      width: 90%;
-      padding: 4px;
-      font-family: 'Calibri', sans-serif;
-    }
-    input[type="checkbox"] {
-      transform: scale(1.2);
-    }
-    button.deleteBtn {
-      background-color: #ff7f50;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      font-family: 'Calibri', sans-serif;
-    }
-    button.deleteBtn:hover {
-      background-color: #e06645;
+      margin-bottom: 10px;
     }
 
-    /* Bouton Accueil en haut à gauche */
-    .btn-home {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background-color: #f39c12;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-family: 'Calibri', sans-serif;
-      font-size: 14px;
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
     }
-    .btn-home:hover {
-      background-color: #e67e22;
+
+    th {
+      background-color: #ffe0b2;
+      color: #8a4b00;
+    }
+
+    tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #fff2e6;
+    }
+
+    .add-btn {
+      background-color: #f57c00;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    .edit-btn {
+      background-color: #64b5f6;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: #e57373;
+      color: white;
+    }
+
+    .total {
+      font-weight: bold;
+      color: #d84315;
+    }
+
+    .global-total {
+      text-align: right;
+      font-size: 1.3em;
+      color: #1b5e20;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100px;
+      font-family: Calibri, sans-serif;
     }
   </style>
 </head>
 <body>
 
-  <!-- Bouton Accueil -->
-  <a href="index.html" class="btn-home">🏠 Accueil</a>
+  <header>
+    <a href="index.html" class="home-btn">🏠 Accueil</a>
+    <label class="complete-checkbox">
+      <input type="checkbox" id="complete-check"> Activités complètes
+    </label>
+  </header>
 
-  <h1>Cadeaux de Mattéo</h1>
-  <table id="cadeauTable">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Cadeau</th>
-        <th>Acheté</th>
-        <th>Supprimer</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Lignes générées par JavaScript -->
-    </tbody>
-  </table>
+  <h1>Activités de la soirée</h1>
+
+  <div id="activities-container">
+    <!-- Activités seront ajoutées ici dynamiquement -->
+  </div>
+
+  <div class="global-total">
+    Total global : <span id="global-total">0.00 €</span>
+  </div>
 
   <script>
-    const tbody = document.querySelector('#cadeauTable tbody');
-    const LOCAL_STORAGE_KEY = "cadeaux-matteo";
+    const activities = [
+      {
+        nom: "Beer Pong",
+        description: "Jeu classique de lancer de balles dans des gobelets pour faire boire l’équipe adverse.",
+        id: "beerpong"
+      },
+      {
+        nom: "Banana Twerk",
+        description: "Il faut faire tomber des balles de ping-pong avec une banane attachée à la taille.",
+        id: "banana"
+      },
+      {
+        nom: "Tic-Toctoe (Morpion)",
+        description: "Jeu de morpion en format géant ou sur carton à jouer en équipe.",
+        id: "morpion"
+      }
+    ];
 
-    function loadData() {
-      const saved = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
-      return saved;
+    const container = document.getElementById('activities-container');
+
+    function createActivity(activity) {
+      const div = document.createElement('div');
+      div.className = 'activity';
+      div.id = activity.id;
+
+      div.innerHTML = `
+        <h2>${activity.nom}</h2>
+        <div class="description">${activity.description}</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Article</th>
+              <th>Prix Unitaire (€)</th>
+              <th>Quantité</th>
+              <th>Total</th>
+              <th>Acheté</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button class="add-btn" onclick="addRow('${activity.id}')">Ajouter</button>
+        <div class="total">Total ${activity.nom} : <span class="activity-total">0.00 €</span></div>
+      `;
+
+      container.appendChild(div);
     }
 
-    function saveData() {
-      const rows = Array.from(tbody.querySelectorAll('tr')).map(row => {
-        return {
-          cadeau: row.querySelector('input[type="text"]').value,
-          coche: row.querySelector('input[type="checkbox"]').checked
-        };
+    function addRow(activityId) {
+      const tbody = document.querySelector(`#${activityId} tbody`);
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+        <td><input type="text" /></td>
+        <td><input type="number" step="0.01" oninput="updateTotals()" /></td>
+        <td><input type="number" oninput="updateTotals()" /></td>
+        <td class="row-total">0.00 €</td>
+        <td><input type="checkbox" onchange="updateTotals()" /></td>
+        <td>
+          <button class="action-btn edit-btn" onclick="editRow(this)">Modifier</button>
+          <button class="action-btn delete-btn" onclick="deleteRow(this)">Supprimer</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    }
+
+    function updateTotals() {
+      let globalTotal = 0;
+      activities.forEach(activity => {
+        const rows = document.querySelectorAll(`#${activity.id} tbody tr`);
+        let total = 0;
+        rows.forEach(row => {
+          const prix = parseFloat(row.cells[1].querySelector('input').value) || 0;
+          const qte = parseFloat(row.cells[2].querySelector('input').value) || 0;
+          const coche = row.cells[4].querySelector('input').checked;
+          const subtotal = prix * qte;
+          if (coche || !row.cells[4].querySelector('input')) {
+            row.cells[3].textContent = subtotal.toFixed(2) + " €";
+            total += subtotal;
+          } else {
+            row.cells[3].textContent = "0.00 €";
+          }
+        });
+        document.querySelector(`#${activity.id} .activity-total`).textContent = total.toFixed(2) + " €";
+        globalTotal += total;
       });
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
+      document.getElementById("global-total").textContent = globalTotal.toFixed(2) + " €";
     }
 
-    function updateRowNumbers() {
-      const rows = tbody.querySelectorAll('tr');
-      rows.forEach((row, index) => {
-        row.children[0].textContent = index + 1;
-      });
-      saveData();
+    function deleteRow(btn) {
+      btn.closest('tr').remove();
+      updateTotals();
     }
 
-    function createRow(index, cadeau = "", coche = false) {
-      const tr = document.createElement('tr');
-
-      const tdNum = document.createElement('td');
-      tdNum.textContent = index + 1;
-      tr.appendChild(tdNum);
-
-      const tdCadeau = document.createElement('td');
-      const inputCadeau = document.createElement('input');
-      inputCadeau.type = 'text';
-      inputCadeau.placeholder = 'Saisir un cadeau';
-      inputCadeau.value = cadeau;
-      inputCadeau.addEventListener('input', saveData);
-      tdCadeau.appendChild(inputCadeau);
-      tr.appendChild(tdCadeau);
-
-      const tdAchat = document.createElement('td');
-      const inputAchat = document.createElement('input');
-      inputAchat.type = 'checkbox';
-      inputAchat.checked = coche;
-      inputAchat.addEventListener('change', saveData);
-      tdAchat.style.textAlign = 'center';
-      tdAchat.appendChild(inputAchat);
-      tr.appendChild(tdAchat);
-
-      const tdDelete = document.createElement('td');
-      tdDelete.style.textAlign = 'center';
-      const btnDelete = document.createElement('button');
-      btnDelete.className = 'deleteBtn';
-      btnDelete.textContent = 'Supprimer';
-      btnDelete.addEventListener('click', () => {
-        tr.remove();
-        updateRowNumbers();
-      });
-      tdDelete.appendChild(btnDelete);
-      tr.appendChild(tdDelete);
-
-      tbody.appendChild(tr);
+    function editRow(btn) {
+      const row = btn.closest('tr');
+      const inputs = row.querySelectorAll('input');
+      inputs.forEach(input => input.disabled = !input.disabled);
+      btn.textContent = btn.textContent === "Modifier" ? "OK" : "Modifier";
+      updateTotals();
     }
 
-    const savedData = loadData();
-    for (let i = 0; i < 18; i++) {
-      const data = savedData[i] || { cadeau: "", coche: false };
-      createRow(i, data.cadeau, data.coche);
-    }
+    // Initialisation
+    activities.forEach(createActivity);
   </script>
 </body>
 </html>
