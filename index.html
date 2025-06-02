@@ -11,27 +11,24 @@
       --bluegreen: #2c8c7a;
       --bluegreen-dark: #1f5f4b;
       --text-color: #264c47;
-      --bg-color: #fff9f2; /* très clair avec un soupçon d'orange */
-      --card-bg: #f0f7f5; /* bleu-vert pâle */
+      --bg-color: #fff9f2;
+      --card-bg: #f0f7f5;
       --shadow-light: rgba(44, 140, 122, 0.15);
       --shadow-hover: rgba(230, 126, 34, 0.3);
       --border-radius: 12px;
     }
 
-    /* Polices */
     body {
       font-family: "Calibri", Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
       margin: 0;
       padding: 20px;
       background-color: var(--bg-color);
       color: var(--text-color);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
 
     h1 {
@@ -40,6 +37,18 @@
       font-weight: 700;
       line-height: 1.2;
       text-shadow: 1px 1px 2px var(--shadow-light);
+    }
+
+    #countdown {
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--bluegreen-dark);
+      background: var(--card-bg);
+      padding: 15px 20px;
+      margin: 10px auto 40px;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      box-shadow: 0 4px 10px var(--shadow-light);
     }
 
     main {
@@ -64,7 +73,6 @@
       text-align: center;
       transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
       cursor: pointer;
-      user-select: none;
     }
 
     nav ul li:hover,
@@ -81,20 +89,15 @@
       font-size: 1.15rem;
       color: var(--bluegreen-dark);
       transition: color 0.3s ease;
-      outline-offset: 4px;
-      outline-color: transparent;
     }
 
     nav ul li a:hover,
     nav ul li a:focus {
       color: var(--orange);
-      outline-color: var(--orange);
-      outline-style: solid;
-      outline-width: 2px;
+      outline: 2px solid var(--orange);
       border-radius: 6px;
     }
 
-    /* Responsive - un peu plus grand sur petits écrans */
     @media (max-width: 400px) {
       nav ul {
         grid-template-columns: 1fr;
@@ -112,6 +115,7 @@
 <body>
   <header>
     <h1>Bienvenue à l'organisation des 18 ans de Mattéo</h1>
+    <div id="countdown">Chargement du compte à rebours...</div>
   </header>
 
   <main>
@@ -131,5 +135,30 @@
       </ul>
     </nav>
   </main>
+
+  <script>
+    const countdownElement = document.getElementById("countdown");
+    const eventDate = new Date("September 6, 2025 19:30:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const timeLeft = eventDate - now;
+
+      if (timeLeft <= 0) {
+        countdownElement.innerHTML = "🎉 C'est le grand jour ! 🎉";
+        return;
+      }
+
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+      const seconds = Math.floor((timeLeft / 1000) % 60);
+
+      countdownElement.innerHTML = `⏳ ${days}j ${hours}h ${minutes}min ${seconds}s avant la fête !`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>
