@@ -340,4 +340,25 @@
     renderTable();
   </script>
 </body>
+ <!-- Connexion à Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://frdwvmsopgajqbjtgzud.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyZHd2bXNvcGdhanFianRnenVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5ODE3MjEsImV4cCI6MjA2NDU1NzcyMX0.yUGlUn_jqhkJ_6Z25OtdXDoWwAnelrdXRwg8YB2bAg4'
+  );
+
+  // Exemple : récupérer les invités
+  async function chargerInvites() {
+    const { data, error } = await supabase.from('guests').select('*');
+    if (error) {
+      console.error("Erreur de chargement :", error);
+    } else {
+      console.log("🎉 Invités récupérés depuis Supabase :", data);
+    }
+  }
+
+  // Appelle la fonction
+  chargerInvites();
+</script>
 </html>

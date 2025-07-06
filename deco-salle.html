@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PDéco de la salle - 18 ans de Mattéo</title>
+<title>Déco de la salle - 18 ans de Mattéo</title>
 <style>
   body {
     font-family: Calibri, sans-serif;
     margin: 20px;
-    color: #2c8c84; /* bleu-vert */
+    color: #2c8c84;
     background-color: #fff;
   }
   h1 {
     text-align: center;
-    color: #f07c29; /* orange */
+    color: #f07c29;
     margin-bottom: 5px;
   }
   h2 {
@@ -25,7 +25,7 @@
   }
   #homeBtn {
     float: left;
-    background-color: #2c8c84; /* bleu-vert */
+    background-color: #2c8c84;
     color: white;
     border: none;
     border-radius: 5px;
@@ -97,12 +97,6 @@
     text-align: right;
     margin-top: 10px;
   }
-  /* Clear float for button */
-  #buttonContainer::after {
-    content: "";
-    display: block;
-    clear: both;
-  }
 </style>
 </head>
 <body>
@@ -124,9 +118,7 @@
       <th>Supprimer</th>
     </tr>
   </thead>
-  <tbody>
-    <!-- Lignes ajoutées ici -->
-  </tbody>
+  <tbody></tbody>
 </table>
 
 <button id="addRowBtn" type="button">Ajouter une ligne</button>
@@ -143,26 +135,31 @@
   function calculateTotalGlobal() {
     let total = 0;
     gifts.forEach(gift => {
-      if (
-        gift.bought &&
-        gift.quantity && gift.price &&
-        !isNaN(gift.quantity) && !isNaN(gift.price)
-      ) {
+      if (gift.bought && gift.quantity && gift.price && !isNaN(gift.quantity) && !isNaN(gift.price)) {
         total += gift.quantity * gift.price;
       }
     });
     totalPriceDiv.textContent = "Total global : " + total.toFixed(2) + " €";
   }
 
+  function saveData() {
+    localStorage.setItem("giftsData", JSON.stringify(gifts));
+  }
+
+  function loadData() {
+    const data = localStorage.getItem("giftsData");
+    if (data) {
+      gifts = JSON.parse(data);
+    }
+  }
+
   function createRow(gift, index) {
     const row = document.createElement("tr");
 
-    // Colonne numéro
     const tdNum = document.createElement("td");
     tdNum.textContent = index + 1;
     row.appendChild(tdNum);
 
-    // Colonne nom cadeau
     const tdName = document.createElement("td");
     const inputName = document.createElement("input");
     inputName.type = "text";
@@ -170,11 +167,11 @@
     inputName.placeholder = "Nom du cadeau";
     inputName.addEventListener("input", () => {
       gift.name = inputName.value;
+      saveData();
     });
     tdName.appendChild(inputName);
     row.appendChild(tdName);
 
-    // Colonne quantité
     const tdQty = document.createElement("td");
     const inputQty = document.createElement("input");
     inputQty.type = "number";
@@ -183,11 +180,11 @@
     inputQty.addEventListener("input", () => {
       gift.quantity = parseInt(inputQty.value) || 0;
       updateRowTotal(row, gift);
+      saveData();
     });
     tdQty.appendChild(inputQty);
     row.appendChild(tdQty);
 
-    // Colonne prix unitaire
     const tdPrice = document.createElement("td");
     const inputPrice = document.createElement("input");
     inputPrice.type = "number";
@@ -197,16 +194,15 @@
     inputPrice.addEventListener("input", () => {
       gift.price = parseFloat(inputPrice.value) || 0;
       updateRowTotal(row, gift);
+      saveData();
     });
     tdPrice.appendChild(inputPrice);
     row.appendChild(tdPrice);
 
-    // Colonne total ligne
     const tdTotal = document.createElement("td");
     tdTotal.textContent = (gift.quantity && gift.price) ? (gift.quantity * gift.price).toFixed(2) : "0.00";
     row.appendChild(tdTotal);
 
-    // Colonne checkbox acheté
     const tdBought = document.createElement("td");
     const inputBought = document.createElement("input");
     inputBought.type = "checkbox";
@@ -214,11 +210,11 @@
     inputBought.addEventListener("change", () => {
       gift.bought = inputBought.checked;
       calculateTotalGlobal();
+      saveData();
     });
     tdBought.appendChild(inputBought);
     row.appendChild(tdBought);
 
-    // Colonne bouton supprimer
     const tdDelete = document.createElement("td");
     const btnDelete = document.createElement("button");
     btnDelete.textContent = "X";
@@ -226,6 +222,7 @@
     btnDelete.addEventListener("click", () => {
       gifts.splice(index, 1);
       renderTable();
+      saveData();
     });
     tdDelete.appendChild(btnDelete);
     row.appendChild(tdDelete);
@@ -246,6 +243,7 @@
       giftsTableBody.appendChild(createRow(gift, index));
     });
     calculateTotalGlobal();
+    saveData();
   }
 
   addRowBtn.addEventListener("click", () => {
@@ -253,7 +251,7 @@
     renderTable();
   });
 
-  // Affiche table vide au démarrage
+  loadData();
   renderTable();
 </script>
 
