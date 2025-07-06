@@ -1,289 +1,366 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Activités de la soirée</title>
-  <style>
-    body {
-      font-family: Calibri, sans-serif;
-      background-color: #fff8f0;
-      color: #333;
-      padding: 20px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .home-btn {
-      border: 2px solid #f57c00;
-      border-radius: 10px;
-      padding: 8px 14px;
-      background-color: #ffe0b2;
-      color: #8a4b00;
-      text-decoration: none;
-      font-size: 1.1em;
-    }
-
-    h1 {
-      color: #f57c00;
-      font-size: 2em;
-    }
-
-    .complete-checkbox {
-      font-weight: bold;
-      font-size: 1.1em;
-      color: #2e7d32;
-    }
-
-    .activity {
-      margin-bottom: 40px;
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #e0f2f1;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      color: #00796b;
-      margin-top: 0;
-    }
-
-    .description {
-      font-style: italic;
-      margin-bottom: 15px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #ffe0b2;
-      color: #8a4b00;
-    }
-
-    tr:nth-child(even) {
-      background-color: #ffffff;
-    }
-
-    tr:nth-child(odd) {
-      background-color: #fff2e6;
-    }
-
-    .add-btn {
-      background-color: #f57c00;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    .action-btn {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      margin-right: 5px;
-      cursor: pointer;
-    }
-
-    .edit-btn {
-      background-color: #64b5f6;
-      color: white;
-    }
-
-    .delete-btn {
-      background-color: #e57373;
-      color: white;
-    }
-
-    .total {
-      font-weight: bold;
-      color: #d84315;
-    }
-
-    .global-total {
-      text-align: right;
-      font-size: 1.3em;
-      color: #1b5e20;
-    }
-
-    input[type="text"], input[type="number"] {
-      width: 100px;
-      font-family: Calibri, sans-serif;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Activités personnalisées - Anniversaire</title>
+<style>
+  body {
+    font-family: Calibri, sans-serif;
+    margin: 20px;
+    color: #2c8c84; /* bleu-vert */
+    background-color: #fff;
+  }
+  h1 {
+    text-align: center;
+    color: #f07c29; /* orange */
+    margin-bottom: 5px;
+  }
+  h2 {
+    color: #2c8c84;
+    margin: 0 0 5px 0;
+    display: inline-block;
+  }
+  .activity-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .activity-complete {
+    margin-left: auto;
+    font-weight: bold;
+    color: #2e7d32;
+  }
+  .activity-complete input {
+    transform: scale(1.3);
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  .activity-description {
+    font-style: italic;
+    margin-bottom: 10px;
+    margin-top: 0;
+  }
+  #addActivityBtn {
+    background-color: #f07c29;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  #addActivityBtn:hover {
+    background-color: #c15e1e;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    border: 1px solid #2c8c84;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #f07c29;
+    color: white;
+  }
+  input[type="text"], input[type="number"] {
+    width: 90%;
+    font-family: Calibri, sans-serif;
+    padding: 4px;
+    box-sizing: border-box;
+  }
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  button.actionBtn {
+    background-color: #f07c29;
+    border: none;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  button.actionBtn:hover {
+    background-color: #c15e1e;
+  }
+  #totalGlobal {
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: #f07c29;
+    text-align: right;
+    margin-top: 30px;
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <a href="index.html" class="home-btn">🏠 Accueil</a>
-    <label class="complete-checkbox">
-      <input type="checkbox" id="complete-check"> Activités complètes
-    </label>
-  </header>
+<h1>Activités personnalisées - Anniversaire</h1>
 
-  <h1>Activités de la soirée</h1>
+<button id="addActivityBtn" type="button">Ajouter une activité</button>
 
-  <div id="activities-container">
-    <!-- Activités ajoutées dynamiquement -->
-  </div>
+<div id="activitiesContainer">
+  <!-- Activités ajoutées ici -->
+</div>
 
-  <div class="global-total">
-    Total global : <span id="global-total">0.00 €</span>
-  </div>
+<div id="totalGlobal">Total global : 0.00 €</div>
 
-  <script>
-    const activities = [
-      {
-        nom: "Beer Pong",
-        description: "Jeu classique de lancer de balles dans des gobelets pour faire boire l’équipe adverse.",
-        id: "beerpong"
-      },
-      {
-        nom: "Banana Twerk",
-        description: "Il faut faire tomber des balles de ping-pong avec une banane attachée à la taille.",
-        id: "banana"
-      },
-      {
-        nom: "Tic-Toctoe (Morpion)",
-        description: "Jeu de morpion en format géant ou sur carton à jouer en équipe.",
-        id: "morpion"
-      }
-    ];
+<script>
+  const activitiesContainer = document.getElementById('activitiesContainer');
+  const addActivityBtn = document.getElementById('addActivityBtn');
+  const totalGlobalDiv = document.getElementById('totalGlobal');
 
-    const container = document.getElementById('activities-container');
+  let activities = [];
 
-    function createActivity(activity) {
-      const div = document.createElement('div');
-      div.className = 'activity';
-      div.id = activity.id;
+  // Sauvegarder dans localStorage
+  function saveData() {
+    localStorage.setItem('annivActivities', JSON.stringify(activities));
+  }
 
-      div.innerHTML = `
-        <h2>${activity.nom}</h2>
-        <div class="description">${activity.description}</div>
-        <table>
-          <thead>
-            <tr>
-              <th>Article</th>
-              <th>Prix Unitaire (€)</th>
-              <th>Quantité</th>
-              <th>Total</th>
-              <th>Acheté</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <button class="add-btn" onclick="addRow('${activity.id}')">Ajouter</button>
-        <div class="total">Total ${activity.nom} : <span class="activity-total">0.00 €</span></div>
-      `;
-
-      container.appendChild(div);
-    }
-
-    function addRow(activityId, article = "", prix = "", qte = "", coche = false) {
-      const tbody = document.querySelector(`#${activityId} tbody`);
-      const row = document.createElement('tr');
-
-      row.innerHTML = `
-        <td><input type="text" value="${article}" /></td>
-        <td><input type="number" step="0.01" value="${prix}" oninput="updateTotals()" /></td>
-        <td><input type="number" value="${qte}" oninput="updateTotals()" /></td>
-        <td class="row-total">0.00 €</td>
-        <td><input type="checkbox" ${coche ? 'checked' : ''} onchange="updateTotals()" /></td>
-        <td>
-          <button class="action-btn edit-btn" onclick="editRow(this)">Modifier</button>
-          <button class="action-btn delete-btn" onclick="deleteRow(this)">Supprimer</button>
-        </td>
-      `;
-
-      tbody.appendChild(row);
-      updateTotals();
-      saveData();
-    }
-
-    function updateTotals() {
-      let globalTotal = 0;
-      activities.forEach(activity => {
-        const rows = document.querySelectorAll(`#${activity.id} tbody tr`);
-        let total = 0;
-        rows.forEach(row => {
-          const prix = parseFloat(row.cells[1].querySelector('input').value) || 0;
-          const qte = parseFloat(row.cells[2].querySelector('input').value) || 0;
-          const coche = row.cells[4].querySelector('input').checked;
-          const subtotal = prix * qte;
-          if (coche || !row.cells[4].querySelector('input')) {
-            row.cells[3].textContent = subtotal.toFixed(2) + " €";
-            total += subtotal;
-          } else {
-            row.cells[3].textContent = "0.00 €";
-          }
-        });
-        document.querySelector(`#${activity.id} .activity-total`).textContent = total.toFixed(2) + " €";
-        globalTotal += total;
+  // Calcul total global
+  function calculateTotalGlobal() {
+    let totalGlobal = 0;
+    activities.forEach(act => {
+      let totalAct = 0;
+      act.items.forEach(item => {
+        if(item.bought) {
+          totalAct += (item.price * item.quantity);
+        }
       });
-      document.getElementById("global-total").textContent = globalTotal.toFixed(2) + " €";
+      totalGlobal += totalAct;
+    });
+    totalGlobalDiv.textContent = "Total global : " + totalGlobal.toFixed(2) + " €";
+  }
+
+  // Met à jour le total par ligne et global
+  function updateRowTotal(activityIndex, itemIndex) {
+    const item = activities[activityIndex].items[itemIndex];
+    item.total = item.price * item.quantity;
+    renderActivities();
+    saveData();
+  }
+
+  // Crée une ligne de tableau pour un article
+  function createItemRow(activityIndex, item, itemIndex) {
+    const tr = document.createElement('tr');
+
+    // Nom article
+    const tdName = document.createElement('td');
+    const inputName = document.createElement('input');
+    inputName.type = "text";
+    inputName.value = item.name;
+    inputName.placeholder = "Nom de l'article";
+    inputName.addEventListener('input', (e) => {
+      item.name = e.target.value;
       saveData();
-    }
+    });
+    tdName.appendChild(inputName);
+    tr.appendChild(tdName);
 
-    function deleteRow(btn) {
-      btn.closest('tr').remove();
-      updateTotals();
-    }
+    // Prix unitaire
+    const tdPrice = document.createElement('td');
+    const inputPrice = document.createElement('input');
+    inputPrice.type = "number";
+    inputPrice.min = 0;
+    inputPrice.step = "0.01";
+    inputPrice.value = item.price;
+    inputPrice.addEventListener('input', (e) => {
+      item.price = parseFloat(e.target.value) || 0;
+      updateRowTotal(activityIndex, itemIndex);
+    });
+    tdPrice.appendChild(inputPrice);
+    tr.appendChild(tdPrice);
 
-    function editRow(btn) {
-      const row = btn.closest('tr');
-      const inputs = row.querySelectorAll('input');
-      inputs.forEach(input => input.disabled = !input.disabled);
-      btn.textContent = btn.textContent === "Modifier" ? "OK" : "Modifier";
-      updateTotals();
-    }
+    // Quantité
+    const tdQty = document.createElement('td');
+    const inputQty = document.createElement('input');
+    inputQty.type = "number";
+    inputQty.min = 0;
+    inputQty.value = item.quantity;
+    inputQty.addEventListener('input', (e) => {
+      item.quantity = parseInt(e.target.value) || 0;
+      updateRowTotal(activityIndex, itemIndex);
+    });
+    tdQty.appendChild(inputQty);
+    tr.appendChild(tdQty);
 
-    function saveData() {
-      const data = {};
-      activities.forEach(activity => {
-        const rows = document.querySelectorAll(`#${activity.id} tbody tr`);
-        data[activity.id] = [];
-        rows.forEach(row => {
-          const article = row.cells[0].querySelector('input').value;
-          const prix = row.cells[1].querySelector('input').value;
-          const qte = row.cells[2].querySelector('input').value;
-          const coche = row.cells[4].querySelector('input').checked;
-          data[activity.id].push({ article, prix, qte, coche });
-        });
-      });
-      localStorage.setItem('activitiesData', JSON.stringify(data));
-    }
+    // Total ligne
+    const tdTotal = document.createElement('td');
+    tdTotal.textContent = (item.price * item.quantity).toFixed(2) + " €";
+    tr.appendChild(tdTotal);
 
-    function loadData() {
-      const savedData = localStorage.getItem('activitiesData');
-      if (savedData) {
-        const data = JSON.parse(savedData);
-        activities.forEach(activity => {
-          if (data[activity.id]) {
-            data[activity.id].forEach(item => {
-              addRow(activity.id, item.article, item.prix, item.qte, item.coche);
-            });
-          }
-        });
-      }
-    }
+    // Case acheté
+    const tdBought = document.createElement('td');
+    const inputBought = document.createElement('input');
+    inputBought.type = "checkbox";
+    inputBought.checked = item.bought;
+    inputBought.addEventListener('change', (e) => {
+      item.bought = e.target.checked;
+      calculateTotalGlobal();
+      saveData();
+      renderActivities();
+    });
+    tdBought.appendChild(inputBought);
+    tr.appendChild(tdBought);
 
-    activities.forEach(createActivity);
-    loadData();
-  </script>
+    // Actions (Modifier/Supprimer)
+    const tdAction = document.createElement('td');
+    // Modifier : ici les inputs sont toujours modifiables, donc pas besoin d'un bouton modifier.
+    // Supprimer
+    const btnDelete = document.createElement('button');
+    btnDelete.textContent = "Supprimer";
+    btnDelete.className = "actionBtn";
+    btnDelete.addEventListener('click', () => {
+      activities[activityIndex].items.splice(itemIndex, 1);
+      saveData();
+      renderActivities();
+    });
+    tdAction.appendChild(btnDelete);
+    tr.appendChild(tdAction);
+
+    return tr;
+  }
+
+  // Crée un bloc activité complet (titre, description, checkbox, tableau, bouton ajouter article, total activité)
+  function createActivityBlock(activity, index) {
+    const div = document.createElement('div');
+    div.style.border = "2px solid #2c8c84";
+    div.style.padding = "15px";
+    div.style.marginBottom = "30px";
+    div.style.borderRadius = "8px";
+
+    // Header : nom + checkbox activité complète
+    const header = document.createElement('div');
+    header.className = 'activity-header';
+
+    const inputName = document.createElement('input');
+    inputName.type = "text";
+    inputName.value = activity.name;
+    inputName.placeholder = "Nom de l'activité";
+    inputName.style.fontSize = "1.3rem";
+    inputName.style.fontWeight = "bold";
+    inputName.style.flexGrow = "1";
+    inputName.addEventListener('input', e => {
+      activity.name = e.target.value;
+      saveData();
+    });
+
+    const completeLabel = document.createElement('label');
+    completeLabel.className = "activity-complete";
+    completeLabel.textContent = "Activité complète";
+    const completeCheckbox = document.createElement('input');
+    completeCheckbox.type = "checkbox";
+    completeCheckbox.checked = activity.complete;
+    completeCheckbox.addEventListener('change', e => {
+      activity.complete = e.target.checked;
+      saveData();
+    });
+    completeLabel.appendChild(completeCheckbox);
+
+    header.appendChild(inputName);
+    header.appendChild(completeLabel);
+    div.appendChild(header);
+
+    // Description
+    const desc = document.createElement('p');
+    desc.className = "activity-description";
+    const inputDesc = document.createElement('input');
+    inputDesc.type = "text";
+    inputDesc.value = activity.description;
+    inputDesc.placeholder = "Description (optionnelle)";
+    inputDesc.style.width = "100%";
+    inputDesc.addEventListener('input', e => {
+      activity.description = e.target.value;
+      saveData();
+    });
+    desc.appendChild(inputDesc);
+    div.appendChild(desc);
+
+    // Tableau articles
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+      <tr>
+        <th>Nom article</th>
+        <th>Prix unitaire (€)</th>
+        <th>Quantité</th>
+        <th>Total</th>
+        <th>Acheté</th>
+        <th>Action</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    activity.items.forEach((item, i) => {
+      tbody.appendChild(createItemRow(index, item, i));
+    });
+    table.appendChild(tbody);
+    div.appendChild(table);
+
+    // Bouton ajouter article
+    const btnAddItem = document.createElement('button');
+    btnAddItem.textContent = "Ajouter un article";
+    btnAddItem.className = "actionBtn";
+    btnAddItem.style.marginBottom = "10px";
+    btnAddItem.addEventListener('click', () => {
+      activity.items.push({name:"", price:0, quantity:0, bought:false});
+      saveData();
+      renderActivities();
+    });
+    div.appendChild(btnAddItem);
+
+    // Total activité
+    const totalAct = activity.items.reduce((sum, item) => item.bought ? sum + item.price*item.quantity : sum, 0);
+    const totalActDiv = document.createElement('div');
+    totalActDiv.style.textAlign = "right";
+    totalActDiv.style.fontWeight = "bold";
+    totalActDiv.style.color = "#f07c29";
+    totalActDiv.textContent = `Total ${activity.name || ""} : ${totalAct.toFixed(2)} €`;
+    div.appendChild(totalActDiv);
+
+    return div;
+  }
+
+  // Affiche toutes les activités
+  function renderActivities() {
+    activitiesContainer.innerHTML = "";
+    activities.forEach((activity, index) => {
+      activitiesContainer.appendChild(createActivityBlock(activity, index));
+    });
+    calculateTotalGlobal();
+  }
+
+  addActivityBtn.addEventListener('click', () => {
+    activities.push({
+      name: "",
+      description: "",
+      complete: false,
+      items: []
+    });
+    saveData();
+    renderActivities();
+  });
+
+  // Charge les données au démarrage
+  function loadData() {
+    const saved = localStorage.getItem('annivActivities');
+    if(saved) {
+      activities = JSON.parse(saved);
+    }
+    renderActivities();
+  }
+
+  loadData();
+</script>
+
 </body>
 </html>
